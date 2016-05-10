@@ -169,9 +169,9 @@ jerry_api_value_is_boolean (const jerry_api_value_t *value_p) /**< pointer to ap
 bool
 jerry_api_value_is_number (const jerry_api_value_t *value_p) /**< pointer to api value */
 {
-  return value_p->type == JERRY_API_DATA_TYPE_FLOAT32
-  || value_p->type == JERRY_API_DATA_TYPE_FLOAT64
-  || value_p->type == JERRY_API_DATA_TYPE_UINT32;
+  return (value_p->type == JERRY_API_DATA_TYPE_FLOAT32
+          || value_p->type == JERRY_API_DATA_TYPE_FLOAT64
+          || value_p->type == JERRY_API_DATA_TYPE_UINT32);
 } /* jerry_api_value_is_number */
 
 /**
@@ -772,9 +772,9 @@ jerry_api_set_array_index_value (jerry_api_object_t *array_obj_p, /* array objec
  *         throw exception - otherwise.
  */
 bool
-jerry_api_get_array_index_value (jerry_api_object_t *array_obj_p, /* array object */
-                                 jerry_api_length_t index, /* index to be written */
-                                 jerry_api_value_t *value_p) /* output value at index */
+jerry_api_get_array_index_value (const jerry_api_object_t *array_obj_p, /**< array object */
+                                 jerry_api_length_t index, /**< index to be written */
+                                 jerry_api_value_t *value_p) /**< [out] value at index */
 {
   ecma_string_t *str_idx_p = ecma_new_ecma_string_from_uint32 ((uint32_t) index);
   ecma_value_t get_completion = ecma_op_object_get (array_obj_p, str_idx_p);
@@ -1127,7 +1127,7 @@ jerry_api_delete_object_field (jerry_api_object_t *object_p, /**< object to dele
  *                - there is field with specified name in the object;
  *         false - otherwise.
  */
-bool jerry_api_get_object_field_value (jerry_api_object_t *object_p, /**< object */
+bool jerry_api_get_object_field_value (const jerry_api_object_t *object_p, /**< object */
                                        const jerry_api_char_t *field_name_p, /**< field name */
                                        jerry_api_value_t *field_value_p) /**< [out] field value */
 {
@@ -1206,7 +1206,7 @@ jerry_api_foreach_object_field (jerry_api_object_t *object_p, /**< object */
  *         false - otherwise.
  */
 bool
-jerry_api_get_object_field_value_sz (jerry_api_object_t *object_p, /**< object */
+jerry_api_get_object_field_value_sz (const jerry_api_object_t *object_p, /**< object */
                                      const jerry_api_char_t *field_name_p, /**< name of the field */
                                      jerry_api_size_t field_name_size, /**< size of field name in bytes */
                                      jerry_api_value_t *field_value_p) /**< [out] field value, if retrieved
@@ -1308,7 +1308,7 @@ jerry_api_set_object_field_value_sz (jerry_api_object_t *object_p, /**< object *
  *         false - otherwise.
  */
 bool
-jerry_api_get_object_native_handle (jerry_api_object_t *object_p, /**< object to get handle from */
+jerry_api_get_object_native_handle (const jerry_api_object_t *object_p, /**< object to get handle from */
                                     uintptr_t *out_handle_p) /**< [out] handle value */
 {
   jerry_assert_api_available ();

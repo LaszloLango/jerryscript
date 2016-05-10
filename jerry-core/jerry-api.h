@@ -284,7 +284,7 @@ jerry_api_string_t *jerry_api_create_string (const jerry_api_char_t *);
 jerry_api_string_t *jerry_api_create_string_sz (const jerry_api_char_t *, jerry_api_size_t);
 
 bool jerry_api_set_array_index_value (jerry_api_object_t *, jerry_api_length_t, jerry_api_value_t *);
-bool jerry_api_get_array_index_value (jerry_api_object_t *, jerry_api_length_t, jerry_api_value_t *);
+bool jerry_api_get_array_index_value (const jerry_api_object_t *, jerry_api_length_t, jerry_api_value_t *);
 
 jerry_api_object_t *jerry_api_create_error (jerry_api_error_t, const jerry_api_char_t *);
 jerry_api_object_t *jerry_api_create_error_sz (jerry_api_error_t, const jerry_api_char_t *, jerry_api_size_t);
@@ -297,8 +297,8 @@ bool jerry_api_add_object_field (jerry_api_object_t *, const jerry_api_char_t *,
                                  const jerry_api_value_t *, bool);
 bool jerry_api_delete_object_field (jerry_api_object_t *, const jerry_api_char_t *, jerry_api_size_t);
 
-bool jerry_api_get_object_field_value (jerry_api_object_t *, const jerry_api_char_t *, jerry_api_value_t *);
-bool jerry_api_get_object_field_value_sz (jerry_api_object_t *, const jerry_api_char_t *, jerry_api_size_t,
+bool jerry_api_get_object_field_value (const jerry_api_object_t *, const jerry_api_char_t *, jerry_api_value_t *);
+bool jerry_api_get_object_field_value_sz (const jerry_api_object_t *, const jerry_api_char_t *, jerry_api_size_t,
                                           jerry_api_value_t *);
 
 bool jerry_api_set_object_field_value (jerry_api_object_t *, const jerry_api_char_t *, const jerry_api_value_t *);
@@ -306,7 +306,7 @@ bool jerry_api_set_object_field_value_sz (jerry_api_object_t *, const jerry_api_
                                           const jerry_api_value_t *);
 
 bool jerry_api_foreach_object_field (jerry_api_object_t *, jerry_object_field_foreach_t, void *);
-bool jerry_api_get_object_native_handle (jerry_api_object_t *, uintptr_t *);
+bool jerry_api_get_object_native_handle (const jerry_api_object_t *, uintptr_t *);
 void jerry_api_set_object_native_handle (jerry_api_object_t *, uintptr_t, jerry_object_free_callback_t);
 bool jerry_api_call_function (jerry_api_object_t *, jerry_api_object_t *, jerry_api_value_t *,
                               const jerry_api_value_t[], uint16_t);
