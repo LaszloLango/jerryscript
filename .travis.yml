@@ -1,30 +1,23 @@
 language: c
-
 os: linux
 dist: trusty
 sudo: required
-
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tools/apt-get-install-deps.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tools/apt-get-install-qemu-arm.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tools/brew-install-deps.sh; fi
-
-install:
-
-script: "make -j VERBOSE=1 NINJA=1 $TARGET"
-
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tools/apt-get-install-deps.sh; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tools/apt-get-install-qemu-arm.sh; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tools/brew-install-deps.sh; fi
+install: 
+script: make -j1 VERBOSE=1 NINJA=1 $TARGET
 env:
-  - TARGET="check-signed-off check-vera check-cppcheck"
-  - TARGET="build.linux test-js"
-  - TARGET="build.linux test-js" TOOLCHAIN=build/configs/toolchain_linux_armv7l-hf.cmake TIMEOUT=300
-  - TARGET=test-buildoptions
-  - TARGET=test-unit
-
-matrix:
-  include:
-    - os: osx
-      env: TARGET="build.darwin test-js"
-    - os: osx
-      env: TARGET=test-unit
-  allow_failures:
-    - os: osx
+- TARGET="debug.linux" TOOLCHAIN=build/configs/toolchain_linux_armv7l-hf.cmake TIMEOUT=300
+before_deploy: "echo 'ready?'; ls -l build/bin/debug.linux/jerry"
+deploy:
+  provider: releases
+  api_key:
+    secure: cwJSZDR7KWNmLAQBAFx03nkpnredabBcJPEQlfWTdcoei61YZ2HNDnzENJXkZlRACqWxqZ/Z5ws1lhmn8O3iey1LSsQ+w8z7TDjrYrL31rdxjjH2QUuugLnZf+W6RXq0ZdGePzWYk42xV2Wd2D32bZMjQtkxmZBQq/NXgmanhqxLidujfzX+mX4ruORUdoowb8Y9ypRVpESX5Tx/Bh9crFavZsgoJd/hK/pNHLEZZe9PAAdQF/PGMlKxWwKN+pfZze7Fd7eNwGTlFwuFRCJJpyAej9sD3wJmXW38H4WINkkvtNkxJ+hKtYQlAf6xc0r7l5gCNViKjLUzyvb93hCzkx7LN01yRHafEPcciBaRb0wG70lcEZsbBENDO8OLAM0E5YYcv1iWw81UcZd7itwQujIRP3qKQviQGt62wcqxo9E8/kwdhzoINFYqvDVyTrkRfeFWR0ONoTfKax5x5JuIsW77SSt3eDacjsgogTnNtte1+YByKAmHVufhnkEC8eUNdTOr/K+OXB1HaKf6HqP3y2eA8fZj84uQcsG9ufIycKWzsq4TmuNCO2ibRo9Rmrh0CcZTGcPJ5zjO1sfa1FDMQgS5hUvhOSvqCx1gMtIP07J0mCmJXqoCf9g7ceH/zQxIbsYQqz2K1qvvvD3UXHlSbsIOvAc2XmItgVrA7P66iZw=
+  file: 'build/bin/debug.linux/jerry'
+  skip_cleanup: true
+  overwrite: true
+  on:
+    repo: LaszloLango/jerryscript
+    tags: true
