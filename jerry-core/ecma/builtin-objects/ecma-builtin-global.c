@@ -33,10 +33,6 @@
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
 
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-global.inc.h"
-#define BUILTIN_UNDERSCORED_ID global
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -58,9 +54,11 @@
  */
 static ecma_value_t
 ecma_builtin_global_object_eval (ecma_value_t this_arg, /**< this argument */
-                                 ecma_value_t x) /**< routine's first argument */
+                                 const ecma_value_t argv[], /**< routine's argument list */
+                                 ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
+  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
   bool is_direct_eval = vm_is_direct_eval_form_call ();
@@ -76,15 +74,15 @@ ecma_builtin_global_object_eval (ecma_value_t this_arg, /**< this argument */
     is_called_from_strict_mode_code = false;
   }
 
-  if (!ecma_is_value_string (x))
+  if (!ecma_is_value_string (argv[0]))
   {
     /* step 1 */
-    ret_value = ecma_copy_value (x);
+    ret_value = ecma_copy_value (argv[0]);
   }
   else
   {
     /* steps 2 to 8 */
-    ret_value = ecma_op_eval (ecma_get_string_from_value (x),
+    ret_value = ecma_op_eval (ecma_get_string_from_value (argv[0]),
                               is_direct_eval,
                               is_called_from_strict_mode_code);
   }
@@ -103,11 +101,14 @@ ecma_builtin_global_object_eval (ecma_value_t this_arg, /**< this argument */
  */
 static ecma_value_t
 ecma_builtin_global_object_parse_int (ecma_value_t this_arg, /**< this argument */
-                                      ecma_value_t string, /**< routine's first argument */
-                                      ecma_value_t radix) /**< routine's second argument */
+                                      const ecma_value_t argv[], /**< routine's argument list */
+                                      ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
+  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
+  ecma_value_t string = argv[0];
+  ecma_value_t radix = argv[1];
 
   /* 1. */
   ECMA_TRY_CATCH (string_var, ecma_op_to_string (string), ret_value);
@@ -315,13 +316,15 @@ ecma_builtin_global_object_parse_int (ecma_value_t this_arg, /**< this argument 
  */
 static ecma_value_t
 ecma_builtin_global_object_parse_float (ecma_value_t this_arg, /**< this argument */
-                                        ecma_value_t string) /**< routine's first argument */
+                                        const ecma_value_t argv[], /**< routine's argument list */
+                                        ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
+  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
   /* 1. */
-  ECMA_TRY_CATCH (string_var, ecma_op_to_string (string), ret_value);
+  ECMA_TRY_CATCH (string_var, ecma_op_to_string (argv[0]), ret_value);
 
   ecma_string_t *number_str_p = ecma_get_string_from_value (string_var);
   ECMA_STRING_TO_UTF8_STRING (number_str_p, string_buff, string_buff_size);
@@ -534,12 +537,14 @@ ecma_builtin_global_object_parse_float (ecma_value_t this_arg, /**< this argumen
  */
 static ecma_value_t
 ecma_builtin_global_object_is_nan (ecma_value_t this_arg, /**< this argument */
-                                   ecma_value_t arg) /**< routine's first argument */
+                                   const ecma_value_t argv[], /**< routine's argument list */
+                                   ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
+  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
-  ECMA_OP_TO_NUMBER_TRY_CATCH (arg_num, arg, ret_value);
+  ECMA_OP_TO_NUMBER_TRY_CATCH (arg_num, argv[0], ret_value);
 
   bool is_nan = ecma_number_is_nan (arg_num);
 
@@ -561,12 +566,14 @@ ecma_builtin_global_object_is_nan (ecma_value_t this_arg, /**< this argument */
  */
 static ecma_value_t
 ecma_builtin_global_object_is_finite (ecma_value_t this_arg, /**< this argument */
-                                      ecma_value_t arg) /**< routine's first argument */
+                                      const ecma_value_t argv[], /**< routine's argument list */
+                                      ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
+  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
-  ECMA_OP_TO_NUMBER_TRY_CATCH (arg_num, arg, ret_value);
+  ECMA_OP_TO_NUMBER_TRY_CATCH (arg_num, argv[0], ret_value);
 
   bool is_finite = !(ecma_number_is_nan (arg_num)
                      || ecma_number_is_infinity (arg_num));
@@ -863,10 +870,12 @@ ecma_builtin_global_object_decode_uri_helper (ecma_value_t uri, /**< uri argumen
  */
 static ecma_value_t
 ecma_builtin_global_object_decode_uri (ecma_value_t this_arg, /**< this argument */
-                                       ecma_value_t encoded_uri) /**< routine's first argument */
+                                       const ecma_value_t argv[], /**< routine's argument list */
+                                       ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
-  return ecma_builtin_global_object_decode_uri_helper (encoded_uri, unescaped_uri_set);
+  JERRY_UNUSED (argc);
+  return ecma_builtin_global_object_decode_uri_helper (argv[0], unescaped_uri_set);
 } /* ecma_builtin_global_object_decode_uri */
 
 /**
@@ -880,11 +889,12 @@ ecma_builtin_global_object_decode_uri (ecma_value_t this_arg, /**< this argument
  */
 static ecma_value_t
 ecma_builtin_global_object_decode_uri_component (ecma_value_t this_arg, /**< this argument */
-                                                 ecma_value_t encoded_uri_component) /**< routine's
-                                                                                      *   first argument */
+                                                 const ecma_value_t argv[], /**< routine's argument list */
+                                                 ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
-  return ecma_builtin_global_object_decode_uri_helper (encoded_uri_component, unescaped_uri_component_set);
+  JERRY_UNUSED (argc);
+  return ecma_builtin_global_object_decode_uri_helper (argv[0], unescaped_uri_component_set);
 } /* ecma_builtin_global_object_decode_uri_component */
 
 /**
@@ -1075,10 +1085,12 @@ ecma_builtin_global_object_encode_uri_helper (ecma_value_t uri, /**< uri argumen
  */
 static ecma_value_t
 ecma_builtin_global_object_encode_uri (ecma_value_t this_arg, /**< this argument */
-                                       ecma_value_t uri) /**< routine's first argument */
+                                       const ecma_value_t argv[], /**< routine's argument list */
+                                       ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
-  return ecma_builtin_global_object_encode_uri_helper (uri, unescaped_uri_set);
+  JERRY_UNUSED (argc);
+  return ecma_builtin_global_object_encode_uri_helper (argv[0], unescaped_uri_set);
 } /* ecma_builtin_global_object_encode_uri */
 
 /**
@@ -1092,10 +1104,12 @@ ecma_builtin_global_object_encode_uri (ecma_value_t this_arg, /**< this argument
  */
 static ecma_value_t
 ecma_builtin_global_object_encode_uri_component (ecma_value_t this_arg, /**< this argument */
-                                                 ecma_value_t uri_component) /**< routine's first argument */
+                                                 const ecma_value_t argv[], /**< routine's argument list */
+                                                 ecma_length_t argc) /**< number of arguments */
 {
   JERRY_UNUSED (this_arg);
-  return ecma_builtin_global_object_encode_uri_helper (uri_component, unescaped_uri_component_set);
+  JERRY_UNUSED (argc);
+  return ecma_builtin_global_object_encode_uri_helper (argv[0], unescaped_uri_component_set);
 } /* ecma_builtin_global_object_encode_uri_component */
 
 #ifndef CONFIG_DISABLE_ANNEXB_BUILTIN
@@ -1348,6 +1362,241 @@ ecma_builtin_global_object_unescape (ecma_value_t this_arg, /**< this argument *
 
 #endif /* !CONFIG_DISABLE_ANNEXB_BUILTIN */
 
+/*
+ * Global built-in description
+ */
+const ecma_builtin_property_descriptor_t
+ecma_builtin_global_property_descriptor_list[] =
+{
+  /* ECMA-262 v5, 15.1.1.3 */
+  { LIT_MAGIC_STRING_UNDEFINED,
+    ECMA_BUILTIN_PROPERTY_SIMPLE,
+    ECMA_PROPERTY_FIXED,
+    {.value = ECMA_VALUE_UNDEFINED }
+  },
+  /* ECMA-262 v5, 15.1.1.1 */
+  { LIT_MAGIC_STRING_NAN,
+    ECMA_BUILTIN_PROPERTY_NUMBER,
+    ECMA_PROPERTY_FIXED,
+    { .value = ECMA_BUILTIN_NUMBER_NAN}
+  },
+  /* ECMA-262 v5, 15.1.1.2 */
+  { LIT_MAGIC_STRING_INFINITY_UL,
+    ECMA_BUILTIN_PROPERTY_NUMBER,
+    ECMA_PROPERTY_FIXED,
+    { .value = ECMA_BUILTIN_NUMBER_POSITIVE_INFINITY}
+  },
+  /* ECMA-262 v5, 15.1.4.1 */
+  { LIT_MAGIC_STRING_OBJECT_UL,
+    ECMA_BUILTIN_PROPERTY_OBJECT,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
+    { .value = ECMA_BUILTIN_ID_OBJECT }
+  },
+  /* ECMA-262 v5, 15.1.4.2 */
+  { LIT_MAGIC_STRING_FUNCTION_UL,
+    ECMA_BUILTIN_PROPERTY_OBJECT,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
+    { .value = ECMA_BUILTIN_ID_FUNCTION }
+  },
+
+/* ECMA-262 v5, 15.1.4.3 */
+#ifndef CONFIG_DISABLE_ARRAY_BUILTIN
+OBJECT_VALUE (LIT_MAGIC_STRING_ARRAY_UL,
+              ECMA_BUILTIN_ID_ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_ARRAY_BUILTIN*/
+
+#ifndef CONFIG_DISABLE_STRING_BUILTIN
+/* ECMA-262 v5, 15.1.4.4 */
+OBJECT_VALUE (LIT_MAGIC_STRING_STRING_UL,
+              ECMA_BUILTIN_ID_STRING,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_STRING_BUILTIN */
+
+#ifndef CONFIG_DISABLE_BOOLEAN_BUILTIN
+/* ECMA-262 v5, 15.1.4.5 */
+OBJECT_VALUE (LIT_MAGIC_STRING_BOOLEAN_UL,
+              ECMA_BUILTIN_ID_BOOLEAN,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_BOOLEAN_BUILTIN */
+
+#ifndef CONFIG_DISABLE_NUMBER_BUILTIN
+/* ECMA-262 v5, 15.1.4.6 */
+OBJECT_VALUE (LIT_MAGIC_STRING_NUMBER_UL,
+              ECMA_BUILTIN_ID_NUMBER,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_NUMBER_BUILTIN */
+
+#ifndef CONFIG_DISABLE_DATE_BUILTIN
+/* ECMA-262 v5, 15.1.4.7 */
+OBJECT_VALUE (LIT_MAGIC_STRING_DATE_UL,
+              ECMA_BUILTIN_ID_DATE,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_DATE_BUILTIN */
+
+#ifndef CONFIG_DISABLE_REGEXP_BUILTIN
+/* ECMA-262 v5, 15.1.4.8 */
+OBJECT_VALUE (LIT_MAGIC_STRING_REGEXP_UL,
+              ECMA_BUILTIN_ID_REGEXP,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_REGEXP_BUILTIN */
+
+/* ECMA-262 v5, 15.1.4.9 */
+  { LIT_MAGIC_STRING_ERROR_UL,
+    ECMA_BUILTIN_PROPERTY_OBJECT,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
+    { .value = ECMA_BUILTIN_ID_ERROR }
+  },
+
+#ifndef CONFIG_DISABLE_ERROR_BUILTINS
+/* ECMA-262 v5, 15.1.4.10 */
+OBJECT_VALUE (LIT_MAGIC_STRING_EVAL_ERROR_UL,
+              ECMA_BUILTIN_ID_EVAL_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+/* ECMA-262 v5, 15.1.4.11 */
+OBJECT_VALUE (LIT_MAGIC_STRING_RANGE_ERROR_UL,
+              ECMA_BUILTIN_ID_RANGE_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+/* ECMA-262 v5, 15.1.4.12 */
+OBJECT_VALUE (LIT_MAGIC_STRING_REFERENCE_ERROR_UL,
+              ECMA_BUILTIN_ID_REFERENCE_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+/* ECMA-262 v5, 15.1.4.13 */
+OBJECT_VALUE (LIT_MAGIC_STRING_SYNTAX_ERROR_UL,
+              ECMA_BUILTIN_ID_SYNTAX_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+/* ECMA-262 v5, 15.1.4.14 */
+OBJECT_VALUE (LIT_MAGIC_STRING_TYPE_ERROR_UL,
+              ECMA_BUILTIN_ID_TYPE_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+/* ECMA-262 v5, 15.1.4.15 */
+OBJECT_VALUE (LIT_MAGIC_STRING_URI_ERROR_UL,
+              ECMA_BUILTIN_ID_URI_ERROR,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_ERROR_BUILTINS */
+
+#ifndef CONFIG_DISABLE_MATH_BUILTIN
+/* ECMA-262 v5, 15.1.5.1 */
+OBJECT_VALUE (LIT_MAGIC_STRING_MATH_UL,
+              ECMA_BUILTIN_ID_MATH,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_MATH_BUILTIN */
+
+#ifndef CONFIG_DISABLE_JSON_BUILTIN
+/* ECMA-262 v5, 15.1.5.2 */
+OBJECT_VALUE (LIT_MAGIC_STRING_JSON_U,
+              ECMA_BUILTIN_ID_JSON,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_JSON_BUILTIN */
+
+#ifndef CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN
+OBJECT_VALUE (LIT_MAGIC_STRING_ARRAY_BUFFER_UL,
+              ECMA_BUILTIN_ID_ARRAYBUFFER,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_INT8_ARRAY_UL,
+              ECMA_BUILTIN_ID_INT8ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_UINT8_ARRAY_UL,
+              ECMA_BUILTIN_ID_UINT8ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_INT16_ARRAY_UL,
+              ECMA_BUILTIN_ID_INT16ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_UINT16_ARRAY_UL,
+              ECMA_BUILTIN_ID_UINT16ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_INT32_ARRAY_UL,
+              ECMA_BUILTIN_ID_INT32ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_UINT32_ARRAY_UL,
+              ECMA_BUILTIN_ID_UINT32ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+OBJECT_VALUE (LIT_MAGIC_STRING_FLOAT32_ARRAY_UL,
+              ECMA_BUILTIN_ID_FLOAT32ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+#if CONFIG_ECMA_NUMBER_TYPE == CONFIG_ECMA_NUMBER_FLOAT64
+OBJECT_VALUE (LIT_MAGIC_STRING_FLOAT64_ARRAY_UL,
+              ECMA_BUILTIN_ID_FLOAT64ARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* CONFIG_ECMA_NUMBER_TYPE == CONFIG_ECMA_NUMBER_FLOAT64 */
+
+OBJECT_VALUE (LIT_MAGIC_STRING_UINT8_CLAMPED_ARRAY_UL,
+              ECMA_BUILTIN_ID_UINT8CLAMPEDARRAY,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+
+#endif /* !CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN */
+#ifndef CONFIG_DISABLE_ES2015_PROMISE_BUILTIN
+OBJECT_VALUE (LIT_MAGIC_STRING_PROMISE_UL,
+              ECMA_BUILTIN_ID_PROMISE,
+              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !CONFIG_DISABLE_ES2015_PROMISE_BUILTIN */
+
+/* Routine part */
+  { LIT_MAGIC_STRING_EVAL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_eval }
+  },
+  { LIT_MAGIC_STRING_PARSE_FLOAT,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_parse_float }
+  },
+  { LIT_MAGIC_STRING_IS_NAN,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_is_nan }
+  },
+  { LIT_MAGIC_STRING_IS_FINITE,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_is_finite }
+  },
+  { LIT_MAGIC_STRING_DECODE_URI,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_decode_uri }
+  },
+  { LIT_MAGIC_STRING_DECODE_URI_COMPONENT,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_decode_uri_component }
+  },
+  { LIT_MAGIC_STRING_ENCODE_URI,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_encode_uri }
+  },
+  { LIT_MAGIC_STRING_ENCODE_URI_COMPONENT,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_global_object_encode_uri_component }
+  },
+  { LIT_MAGIC_STRING_PARSE_INT,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
+    { ecma_builtin_global_object_parse_int }
+  },
+
+#ifndef CONFIG_DISABLE_ANNEXB_BUILTIN
+ROUTINE (LIT_MAGIC_STRING_ESCAPE, ecma_builtin_global_object_escape, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_UNESCAPE, ecma_builtin_global_object_unescape, 1, 1)
+#endif /* !CONFIG_DISABLE_ANNEXB_BUILTIN */
+  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+}; /* ecma_builtin_global_property_descriptor_list */
 /**
  * @}
  * @}

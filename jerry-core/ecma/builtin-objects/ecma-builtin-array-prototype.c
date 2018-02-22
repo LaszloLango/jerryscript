@@ -31,12 +31,8 @@
 
 #ifndef CONFIG_DISABLE_ARRAY_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-array-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID array_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
+//#define ECMA_BUILTINS_INTERNAL
+//#include "ecma-builtins-internal.h"
 
 /** \addtogroup ecma ECMA
  * @{

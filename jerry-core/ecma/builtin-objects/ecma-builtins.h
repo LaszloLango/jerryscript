@@ -19,42 +19,14 @@
 #include "ecma-globals.h"
 
 /**
- * A built-in object's identifier
- */
-typedef enum
-{
-#define BUILTIN(a, b, c, d, e)
-#define BUILTIN_ROUTINE(builtin_id, \
-                        object_type, \
-                        object_prototype_builtin_id, \
-                        is_extensible, \
-                        lowercase_name) \
-  builtin_id,
-#include "ecma-builtins.inc.h"
-#undef BUILTIN
-#undef BUILTIN_ROUTINE
-#define BUILTIN_ROUTINE(a, b, c, d, e)
-#define BUILTIN(builtin_id, \
-                object_type, \
-                object_prototype_builtin_id, \
-                is_extensible, \
-                lowercase_name) \
-  builtin_id,
-#include "ecma-builtins.inc.h"
-#undef BUILTIN
-#undef BUILTIN_ROUTINE
-  ECMA_BUILTIN_ID__COUNT /**< number of built-in objects */
-} ecma_builtin_id_t;
-
-/**
- * Construct a routine value
- */
-#define ECMA_ROUTINE_VALUE(id, length) (((id) << 4) | length)
-
-/**
  * Get routine length
  */
-#define ECMA_GET_ROUTINE_LENGTH(value) ((uint8_t) ((value) & 0xf))
+#define ECMA_GET_ROUTINE_LENGTH(value) ((uint8_t) (((value) & 0xE0) >> 5))
+
+/**
+ * Set routine length
+ */
+#define ECMA_SET_ROUTINE_LENGTH(value) ((uint8_t) ((value) << 5))
 
 /**
  * Get routine ID
@@ -75,6 +47,87 @@ typedef enum
  * Get accessor getter ID
  */
 #define ECMA_ACCESSOR_READ_WRITE_GET_GETTER_ID(value) ((uint16_t) ((value) >> 8))
+
+typedef enum
+{
+  ECMA_BUILTIN_ID_OBJECT_PROTOTYPE,
+  ECMA_BUILTIN_ID_OBJECT,
+#if 0
+  ECMA_BUILTIN_ID_ARRAY_PROTOTYPE,
+  ECMA_BUILTIN_ID_ARRAY,
+  ECMA_BUILTIN_ID_STRING_PROTOTYPE,
+  ECMA_BUILTIN_ID_STRING,
+  ECMA_BUILTIN_ID_BOOLEAN_PROTOTYPE,
+  ECMA_BUILTIN_ID_BOOLEAN,
+  ECMA_BUILTIN_ID_NUMBER_PROTOTYPE,
+  ECMA_BUILTIN_ID_NUMBER,
+#endif
+  ECMA_BUILTIN_ID_FUNCTION_PROTOTYPE,
+  ECMA_BUILTIN_ID_FUNCTION,
+#if 0
+  ECMA_BUILTIN_ID_MATH,
+  ECMA_BUILTIN_ID_JSON,
+  ECMA_BUILTIN_ID_DATE_PROTOTYPE,
+  ECMA_BUILTIN_ID_DATE,
+  ECMA_BUILTIN_ID_REGEXP_PROTOTYPE,
+  ECMA_BUILTIN_ID_REGEXP,
+#endif
+  ECMA_BUILTIN_ID_ERROR,
+  ECMA_BUILTIN_ID_ERROR_PROTOTYPE,
+#if 0
+  ECMA_BUILTIN_ID_EVAL_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_EVAL_ERROR,
+  ECMA_BUILTIN_ID_RANGE_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_RANGE_ERROR,
+  ECMA_BUILTIN_ID_REFERENCE_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_REFERENCE_ERROR,
+  ECMA_BUILTIN_ID_SYNTAX_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_SYNTAX_ERROR,
+  ECMA_BUILTIN_ID_TYPE_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_TYPE_ERROR,
+  ECMA_BUILTIN_ID_URI_ERROR_PROTOTYPE,
+  ECMA_BUILTIN_ID_URI_ERROR,
+#endif
+  ECMA_BUILTIN_ID_TYPE_ERROR_THROWER,
+  ECMA_BUILTIN_ID_GLOBAL,
+  ECMA_BUILTIN_ID__COUNT
+} ecma_builtin_id_t;
+
+/**
+ * Type of built-in properties.
+ */
+typedef enum
+{
+  ECMA_BUILTIN_PROPERTY_SIMPLE, /**< simple value property */
+  ECMA_BUILTIN_PROPERTY_NUMBER, /**< number value property */
+  ECMA_BUILTIN_PROPERTY_STRING, /**< string value property */
+  ECMA_BUILTIN_PROPERTY_OBJECT, /**< builtin object property */
+  ECMA_BUILTIN_PROPERTY_ROUTINE, /**< routine property */
+  ECMA_BUILTIN_PROPERTY_ACCESSOR_READ_WRITE, /**< full accessor property */
+  ECMA_BUILTIN_PROPERTY_ACCESSOR_READ_ONLY, /**< read-only accessor property */
+  ECMA_BUILTIN_PROPERTY_END, /**< last property */
+} ecma_builtin_property_type_t;
+
+/**
+ * Function pointer of built-in routines
+ */
+typedef ecma_value_t (*ecma_builtin_routine_t)(ecma_value_t this_arg,
+                                               const ecma_value_t argv[],
+                                               ecma_length_t argc);
+
+/**
+ * Description of built-in properties.
+ */
+typedef struct
+{
+  uint16_t magic_string_id; /**< name of the property */
+  uint8_t type; /**< type of the property */
+  uint8_t attributes; /**< attributes of the property */
+  union {
+    ecma_builtin_routine_t routine_p; /**< pointer to the builtin routine */
+    uint16_t value; /**< value of the property */
+  } u;
+} ecma_builtin_property_descriptor_t;
 
 /* ecma-builtins.c */
 void ecma_finalize_builtins (void);

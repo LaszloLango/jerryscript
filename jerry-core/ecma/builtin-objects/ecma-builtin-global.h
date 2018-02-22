@@ -13,19 +13,14 @@
  * limitations under the License.
  */
 
-/*
- * [[ThrowTypeError]] description
- *
- * See also: ECMA-262 v5, 13.2.3
- */
+#ifndef ECMA_BUILTIN_GLOBAL_H
+#define ECMA_BUILTIN_GLOBAL_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Number properties:
- *  (property name, number value, writable, enumerable, configurable) */
+ecma_value_t ecma_builtin_global_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_global_dispatch_construct (const ecma_value_t *, ecma_length_t);
+extern const ecma_builtin_property_descriptor_t ecma_builtin_global_property_descriptor_list[];
 
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              0,
-              ECMA_PROPERTY_FIXED)
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"
+#endif /* !ECMA_BUILTIN_GLOBAL_H */

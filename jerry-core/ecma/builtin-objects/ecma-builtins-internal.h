@@ -24,21 +24,6 @@
 #include "ecma-globals.h"
 
 /**
- * Type of built-in properties.
- */
-typedef enum
-{
-  ECMA_BUILTIN_PROPERTY_SIMPLE, /**< simple value property */
-  ECMA_BUILTIN_PROPERTY_NUMBER, /**< number value property */
-  ECMA_BUILTIN_PROPERTY_STRING, /**< string value property */
-  ECMA_BUILTIN_PROPERTY_OBJECT, /**< builtin object property */
-  ECMA_BUILTIN_PROPERTY_ROUTINE, /**< routine property */
-  ECMA_BUILTIN_PROPERTY_ACCESSOR_READ_WRITE, /**< full accessor property */
-  ECMA_BUILTIN_PROPERTY_ACCESSOR_READ_ONLY, /**< read-only accessor property */
-  ECMA_BUILTIN_PROPERTY_END, /**< last property */
-} ecma_builtin_property_type_t;
-
-/**
  * Type of symbolic built-in number types (starting from 256).
  */
 typedef enum
@@ -58,50 +43,32 @@ typedef enum
   ECMA_BUILTIN_NUMBER_NEGATIVE_INFINITY, /**< result of ecma_number_make_infinity (true) */
 } ecma_builtin_number_type_t;
 
-/**
- * Description of built-in properties.
- */
-typedef struct
-{
-  uint16_t magic_string_id; /**< name of the property */
-  uint8_t type; /**< type of the property */
-  uint8_t attributes; /**< attributes of the property */
-  uint16_t value; /**< value of the property */
-} ecma_builtin_property_descriptor_t;
 
-#define BUILTIN_ROUTINE(builtin_id, \
-                        object_type, \
-                        object_prototype_builtin_id, \
-                        is_extensible, \
-                        lowercase_name) \
-extern const ecma_builtin_property_descriptor_t \
-ecma_builtin_ ## lowercase_name ## _property_descriptor_list[]; \
-ecma_value_t \
-ecma_builtin_ ## lowercase_name ## _dispatch_call (const ecma_value_t *, \
-                                                   ecma_length_t); \
-ecma_value_t \
-ecma_builtin_ ## lowercase_name ## _dispatch_construct (const ecma_value_t *, \
-                                                        ecma_length_t); \
-ecma_value_t \
-ecma_builtin_ ## lowercase_name ## _dispatch_routine (uint16_t builtin_routine_id, \
-                                                      ecma_value_t this_arg_value, \
-                                                      const ecma_value_t [], \
-                                                      ecma_length_t);
-#define BUILTIN(builtin_id, \
-                object_type, \
-                object_prototype_builtin_id, \
-                is_extensible, \
-                lowercase_name) \
-extern const ecma_builtin_property_descriptor_t \
-ecma_builtin_ ## lowercase_name ## _property_descriptor_list[]; \
-ecma_value_t \
-ecma_builtin_ ## lowercase_name ## _dispatch_routine (uint16_t builtin_routine_id, \
-                                                      ecma_value_t this_arg_value, \
-                                                      const ecma_value_t [], \
-                                                      ecma_length_t);
-#include "ecma-builtins.inc.h"
-
-#undef BUILTIN_ROUTINE
-#undef BUILTIN
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_array_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_array_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_array_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_array_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_array_property_descriptor_list[]; ecma_value_t ecma_builtin_array_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_array_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_array_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_string_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_string_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_string_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_string_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_string_property_descriptor_list[]; ecma_value_t ecma_builtin_string_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_string_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_string_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_boolean_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_boolean_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_boolean_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_boolean_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_boolean_property_descriptor_list[]; ecma_value_t ecma_builtin_boolean_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_boolean_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_boolean_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_number_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_number_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_number_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_number_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_number_property_descriptor_list[]; ecma_value_t ecma_builtin_number_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_number_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_number_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_math_property_descriptor_list[]; ecma_value_t ecma_builtin_math_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_math_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_math_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_json_property_descriptor_list[]; ecma_value_t ecma_builtin_json_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_json_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_json_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_date_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_date_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_date_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_date_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_date_property_descriptor_list[]; ecma_value_t ecma_builtin_date_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_date_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_date_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_regexp_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_regexp_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_regexp_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_regexp_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_regexp_property_descriptor_list[]; ecma_value_t ecma_builtin_regexp_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_regexp_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_regexp_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_eval_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_eval_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_eval_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_eval_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_eval_error_property_descriptor_list[]; ecma_value_t ecma_builtin_eval_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_eval_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_eval_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_range_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_range_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_range_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_range_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_range_error_property_descriptor_list[]; ecma_value_t ecma_builtin_range_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_range_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_range_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_reference_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_reference_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_reference_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_reference_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_reference_error_property_descriptor_list[]; ecma_value_t ecma_builtin_reference_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_reference_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_reference_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_syntax_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_syntax_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_syntax_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_syntax_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_syntax_error_property_descriptor_list[]; ecma_value_t ecma_builtin_syntax_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_syntax_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_syntax_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_type_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_type_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_type_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_type_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_type_error_property_descriptor_list[]; ecma_value_t ecma_builtin_type_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_type_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_type_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_uri_error_prototype_property_descriptor_list[]; ecma_value_t ecma_builtin_uri_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_uri_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_uri_error_prototype_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
+//extern const ecma_builtin_property_descriptor_t ecma_builtin_uri_error_property_descriptor_list[]; ecma_value_t ecma_builtin_uri_error_dispatch_call (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_uri_error_dispatch_construct (const ecma_value_t *, ecma_length_t); ecma_value_t ecma_builtin_uri_error_dispatch_routine (uint16_t builtin_routine_id, ecma_value_t this_arg_value, const ecma_value_t [], ecma_length_t);
 
 #endif /* !ECMA_BUILTINS_INTERNAL_H */

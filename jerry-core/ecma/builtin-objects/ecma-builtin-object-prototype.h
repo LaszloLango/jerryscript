@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-#undef SIMPLE_VALUE
-#undef NUMBER_VALUE
-#undef STRING_VALUE
-#undef OBJECT_VALUE
-#undef ROUTINE
-#undef ACCESSOR_READ_WRITE
-#undef ACCESSOR_READ_ONLY
+#ifndef ECMA_BUILTIN_OBJECT_PROTOTYPE_H
+#define ECMA_BUILTIN_OBJECT_PROTOTYPE_H
+
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
+
+extern const ecma_builtin_property_descriptor_t ecma_builtin_object_prototype_property_descriptor_list[];
+
+#endif /* !ECMA_BUILTIN_OBJECT_PROTOTYPE_H */

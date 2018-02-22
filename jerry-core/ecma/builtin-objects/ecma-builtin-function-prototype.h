@@ -13,26 +13,14 @@
  * limitations under the License.
  */
 
-/*
- * Function built-in description
- */
+#ifndef ECMA_BUILTIN_FUNCTION_PROTOTYPE_H
+#define ECMA_BUILTIN_FUNCTION_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Object properties:
- *  (property name, object pointer getter) */
+ecma_value_t ecma_builtin_function_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_function_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
+extern const ecma_builtin_property_descriptor_t ecma_builtin_function_prototype_property_descriptor_list[];
 
-/* ECMA-262 v5, 15.3.3.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_FUNCTION_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-/* Number properties:
- *  (property name, object pointer getter) */
-
-/* ECMA-262 v5, 15.3.3.2 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"
+#endif /* !ECMA_BUILTIN_FUNCTION_PROTOTYPE_H */
