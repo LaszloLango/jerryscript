@@ -14,7 +14,6 @@
  */
 
 #include "ecma-alloc.h"
-#include "ecma-builtin-function-prototype.h"
 #include "ecma-builtin-helpers.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
@@ -29,6 +28,10 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-function-prototype.inc.h"
+#define BUILTIN_UNDERSCORED_ID function_prototype
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -55,12 +58,8 @@
  *         Returned value must be freed with ecma_free_value.
  */
 static ecma_value_t
-ecma_builtin_function_prototype_object_to_string (ecma_value_t this_arg, /**< this argument */
-                                                  const ecma_value_t argv[], /**< routine's argument list */
-                                                  ecma_length_t argc) /**< number of arguments */
+ecma_builtin_function_prototype_object_to_string (ecma_value_t this_arg) /**< this argument */
 {
-  JERRY_UNUSED (argv);
-  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
   if (!ecma_op_is_callable (this_arg))
@@ -85,10 +84,9 @@ ecma_builtin_function_prototype_object_to_string (ecma_value_t this_arg, /**< th
  */
 static ecma_value_t
 ecma_builtin_function_prototype_object_apply (ecma_value_t this_arg, /**< this argument */
-                                              const ecma_value_t argv[], /**< routine's argument list */
-                                              ecma_length_t argc) /**< number of arguments */
+                                              ecma_value_t arg1, /**< first argument */
+                                              ecma_value_t arg2) /**< second argument */
 {
-  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
   /* 1. */
@@ -101,20 +99,20 @@ ecma_builtin_function_prototype_object_apply (ecma_value_t this_arg, /**< this a
     ecma_object_t *func_obj_p = ecma_get_object_from_value (this_arg);
 
     /* 2. */
-    if (ecma_is_value_null (argv[1]) || ecma_is_value_undefined (argv[1]))
+    if (ecma_is_value_null (arg2) || ecma_is_value_undefined (arg2))
     {
-      ret_value = ecma_op_function_call (func_obj_p, argv[0], NULL, 0);
+      ret_value = ecma_op_function_call (func_obj_p, arg1, NULL, 0);
     }
     else
     {
       /* 3. */
-      if (!ecma_is_value_object (argv[1]))
+      if (!ecma_is_value_object (arg2))
       {
         ret_value = ecma_raise_type_error (ECMA_ERR_MSG ("Argument is not an object."));
       }
       else
       {
-        ecma_object_t *obj_p = ecma_get_object_from_value (argv[1]);
+        ecma_object_t *obj_p = ecma_get_object_from_value (arg2);
 
         /* 4. */
         ecma_value_t length_value = ecma_op_object_get_by_magic_id (obj_p, LIT_MAGIC_STRING_LENGTH);
@@ -167,7 +165,7 @@ ecma_builtin_function_prototype_object_apply (ecma_value_t this_arg, /**< this a
           {
             JERRY_ASSERT (index == length);
             ret_value = ecma_op_function_call (func_obj_p,
-                                               argv[0],
+                                               arg1,
                                                arguments_list_p,
                                                length);
           }
@@ -197,8 +195,8 @@ ecma_builtin_function_prototype_object_apply (ecma_value_t this_arg, /**< this a
  */
 static ecma_value_t
 ecma_builtin_function_prototype_object_call (ecma_value_t this_arg, /**< this argument */
-                                             const ecma_value_t argv[], /**< routine's argument list */
-                                             ecma_length_t argc) /**< number of arguments */
+                                             const ecma_value_t *arguments_list_p, /**< list of arguments */
+                                             ecma_length_t arguments_number) /**< number of arguments */
 {
   if (!ecma_op_is_callable (this_arg))
   {
@@ -208,7 +206,7 @@ ecma_builtin_function_prototype_object_call (ecma_value_t this_arg, /**< this ar
   {
     ecma_object_t *func_obj_p = ecma_get_object_from_value (this_arg);
 
-    if (argc == 0)
+    if (arguments_number == 0)
     {
       /* Even a 'this' argument is missing. */
       return ecma_op_function_call (func_obj_p,
@@ -219,9 +217,9 @@ ecma_builtin_function_prototype_object_call (ecma_value_t this_arg, /**< this ar
     else
     {
       return ecma_op_function_call (func_obj_p,
-                                    argv[0],
-                                    argv + 1,
-                                    (ecma_length_t) (argc - 1u));
+                                    arguments_list_p[0],
+                                    arguments_list_p + 1,
+                                    (ecma_length_t) (arguments_number - 1u));
     }
   }
 } /* ecma_builtin_function_prototype_object_call */
@@ -237,8 +235,8 @@ ecma_builtin_function_prototype_object_call (ecma_value_t this_arg, /**< this ar
  */
 static ecma_value_t
 ecma_builtin_function_prototype_object_bind (ecma_value_t this_arg, /**< this argument */
-                                             const ecma_value_t argv[], /**< routine's argument list */
-                                             ecma_length_t argc) /**< number of arguments */
+                                             const ecma_value_t *arguments_list_p, /**< list of arguments */
+                                             ecma_length_t arguments_number) /**< number of arguments */
 {
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
@@ -252,12 +250,12 @@ ecma_builtin_function_prototype_object_bind (ecma_value_t this_arg, /**< this ar
     /* 4. 11. 18. */
     ecma_object_t *prototype_obj_p = ecma_builtin_get (ECMA_BUILTIN_ID_FUNCTION_PROTOTYPE);
 
-    ecma_length_t args_length = argc;
+    ecma_length_t args_length = arguments_number;
     ecma_object_t *function_p;
     ecma_extended_object_t *ext_function_p;
 
-    if (argc == 0
-        || (argc == 1 && !ecma_is_value_integer_number (argv[0])))
+    if (arguments_number == 0
+        || (arguments_number == 1 && !ecma_is_value_integer_number (arguments_list_p[0])))
     {
       args_length = 1;
 
@@ -273,14 +271,14 @@ ecma_builtin_function_prototype_object_bind (ecma_value_t this_arg, /**< this ar
 
       ext_function_p->u.bound_function.args_len_or_this = ECMA_VALUE_UNDEFINED;
 
-      if (argc != 0)
+      if (arguments_number != 0)
       {
-        ext_function_p->u.bound_function.args_len_or_this = ecma_copy_value_if_not_object (argv[0]);
+        ext_function_p->u.bound_function.args_len_or_this = ecma_copy_value_if_not_object (arguments_list_p[0]);
       }
     }
     else
     {
-      JERRY_ASSERT (argc > 0);
+      JERRY_ASSERT (arguments_number > 0);
 
       size_t obj_size = sizeof (ecma_extended_object_t) + (args_length * sizeof (ecma_value_t));
 
@@ -299,9 +297,9 @@ ecma_builtin_function_prototype_object_bind (ecma_value_t this_arg, /**< this ar
       ext_function_p->u.bound_function.args_len_or_this = ECMA_VALUE_UNDEFINED;
       ecma_value_t *args_p = (ecma_value_t *) (ext_function_p + 1);
 
-      for (ecma_length_t i = 0; i < argc; i++)
+      for (ecma_length_t i = 0; i < arguments_number; i++)
       {
-        *args_p++ = ecma_copy_value_if_not_object (argv[i]);
+        *args_p++ = ecma_copy_value_if_not_object (arguments_list_p[i]);
       }
 
       ecma_value_t args_len_or_this = ecma_make_integer_value ((ecma_integer_value_t) args_length);
@@ -350,39 +348,6 @@ ecma_builtin_function_prototype_dispatch_construct (const ecma_value_t *argument
 
   return ecma_raise_type_error (ECMA_ERR_MSG ("'Function.prototype' is not a constructor."));
 } /* ecma_builtin_function_prototype_dispatch_construct */
-
-const ecma_builtin_property_descriptor_t
-ecma_builtin_function_prototype_property_descriptor_list[] = {
-  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, 0, { .value = 0 } },
-  { LIT_MAGIC_STRING_CONSTRUCTOR,
-    ECMA_BUILTIN_PROPERTY_OBJECT,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
-    { .value = ECMA_BUILTIN_ID_FUNCTION }
-  },
-
-  /* Routine part */
-  { LIT_MAGIC_STRING_TO_STRING_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)),
-    { ecma_builtin_function_prototype_object_to_string }
-  },
-
-  { LIT_MAGIC_STRING_APPLY,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
-    { ecma_builtin_function_prototype_object_apply }
-  },
-  { LIT_MAGIC_STRING_CALL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
-    { ecma_builtin_function_prototype_object_call }
-  },
-  { LIT_MAGIC_STRING_BIND,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
-    { ecma_builtin_function_prototype_object_bind }
-  }
-};
 
 /**
  * @}

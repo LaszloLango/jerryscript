@@ -13,14 +13,26 @@
  * limitations under the License.
  */
 
-#ifndef ECMA_BUILTIN_ERROR_H
-#define ECMA_BUILTIN_ERROR_H
+/*
+ * Error built-in description
+ */
 
-#include "ecma-globals.h"
-#include "ecma-builtins.h"
+#include "ecma-builtin-helpers-macro-defines.inc.h"
 
-ecma_value_t ecma_builtin_error_dispatch_call (const ecma_value_t *, ecma_length_t);
-ecma_value_t ecma_builtin_error_dispatch_construct (const ecma_value_t *, ecma_length_t);
-extern const ecma_builtin_property_descriptor_t ecma_builtin_error_property_descriptor_list[];
+/* Number properties:
+ *  (property name, number value, writable, enumerable, configurable) */
 
-#endif /* !ECMA_BUILTIN_ERROR_H */
+/* ECMA-262 v5, 15.11.3 */
+NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
+              1,
+              ECMA_PROPERTY_FIXED)
+
+/* Object properties:
+ *  (property name, object pointer getter) */
+
+/* ECMA-262 v5, 15.7.3.1 */
+OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
+              ECMA_BUILTIN_ID_ERROR_PROTOTYPE,
+              ECMA_PROPERTY_FIXED)
+
+#include "ecma-builtin-helpers-macro-undefs.inc.h"

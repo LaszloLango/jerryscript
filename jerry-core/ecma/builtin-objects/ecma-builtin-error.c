@@ -25,7 +25,12 @@
 #include "ecma-try-catch-macro.h"
 #include "jrt.h"
 
-#include "ecma-builtin-error.h"
+#define ECMA_BUILTINS_INTERNAL
+#include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-error.inc.h"
+#define BUILTIN_UNDERSCORED_ID error
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -60,23 +65,6 @@ ecma_builtin_error_dispatch_construct (const ecma_value_t *arguments_list_p, /**
 {
   return ecma_builtin_error_dispatch_call (arguments_list_p, arguments_list_len);
 } /* ecma_builtin_error_dispatch_construct */
-
-/*
- * Error built-in description
- */
-const ecma_builtin_property_descriptor_t
-ecma_builtin_error_property_descriptor_list[] =
-{
-  /* ECMA-262 v5, 15.11.3 */
-  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, 0, { .value = 1 } },
-  /* ECMA-262 v5, 15.7.3.1 */
-  { LIT_MAGIC_STRING_PROTOTYPE,
-    ECMA_BUILTIN_PROPERTY_OBJECT,
-    0,
-    { .value = ECMA_BUILTIN_ID_ERROR_PROTOTYPE }
-  },
-  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
-};
 
 /**
  * @}

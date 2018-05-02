@@ -14,7 +14,6 @@
  */
 
 #include "ecma-alloc.h"
-#include "ecma-builtin-function.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
 #include "ecma-eval.h"
@@ -31,6 +30,10 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-function.inc.h"
+#define BUILTIN_UNDERSCORED_ID function
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -188,17 +191,6 @@ ecma_builtin_function_dispatch_construct (const ecma_value_t *arguments_list_p, 
 
   return ret_value;
 } /* ecma_builtin_function_dispatch_construct */
-
-const ecma_builtin_property_descriptor_t
-ecma_builtin_function_property_descriptor_list[] =
-{
-  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, 0, { .value = 1 } },
-  { LIT_MAGIC_STRING_PROTOTYPE,
-    ECMA_BUILTIN_PROPERTY_OBJECT,
-    0,
-    { .value = ECMA_BUILTIN_ID_FUNCTION_PROTOTYPE }
-  }
-};
 
 /**
  * @}

@@ -13,15 +13,19 @@
  * limitations under the License.
  */
 
-#ifndef ECMA_BUILTIN_TYPE_ERROR_THROWER_H
-#define ECMA_BUILTIN_TYPE_ERROR_THROWER_H
+/*
+ * [[ThrowTypeError]] description
+ *
+ * See also: ECMA-262 v5, 13.2.3
+ */
 
-#include "ecma-globals.h"
-#include "ecma-builtins.h"
+#include "ecma-builtin-helpers-macro-defines.inc.h"
 
-ecma_value_t ecma_builtin_type_error_thrower_dispatch_call (const ecma_value_t *, ecma_length_t);
-ecma_value_t ecma_builtin_type_error_thrower_dispatch_construct (const ecma_value_t *, ecma_length_t);
-extern const ecma_builtin_property_descriptor_t ecma_builtin_type_error_thrower_property_descriptor_list[];
+/* Number properties:
+ *  (property name, number value, writable, enumerable, configurable) */
 
-#endif /* !ECMA_BUILTIN_TYPE_ERROR_THROWER_H */
+NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
+              0,
+              ECMA_PROPERTY_FIXED)
 
+#include "ecma-builtin-helpers-macro-undefs.inc.h"

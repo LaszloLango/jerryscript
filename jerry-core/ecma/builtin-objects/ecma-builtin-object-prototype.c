@@ -15,7 +15,6 @@
 
 #include "ecma-alloc.h"
 #include "ecma-builtin-helpers.h"
-#include "ecma-builtin-object-prototype.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -30,6 +29,10 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-object-prototype.inc.h"
+#define BUILTIN_UNDERSCORED_ID object_prototype
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -51,12 +54,8 @@
  *         Returned value must be freed with ecma_free_value.
  */
 static ecma_value_t
-ecma_builtin_object_prototype_object_to_string (ecma_value_t this_arg, /**< this argument */
-                                                const ecma_value_t argv[], /**< routine's argument list */
-                                                ecma_length_t argc) /**< number of arguments */
+ecma_builtin_object_prototype_object_to_string (ecma_value_t this_arg) /**< this argument */
 {
-  JERRY_UNUSED (argv);
-  JERRY_UNUSED (argc);
   return ecma_builtin_helper_object_to_string (this_arg);
 } /* ecma_builtin_object_prototype_object_to_string */
 
@@ -70,12 +69,8 @@ ecma_builtin_object_prototype_object_to_string (ecma_value_t this_arg, /**< this
  *         Returned value must be freed with ecma_free_value.
  */
 static ecma_value_t
-ecma_builtin_object_prototype_object_value_of (ecma_value_t this_arg, /**< this argument */
-                                               const ecma_value_t argv[], /**< routine's argument list */
-                                               ecma_length_t argc) /**< number of arguments */
+ecma_builtin_object_prototype_object_value_of (ecma_value_t this_arg) /**< this argument */
 {
-  JERRY_UNUSED (argv);
-  JERRY_UNUSED (argc);
   return ecma_op_to_object (this_arg);
 } /* ecma_builtin_object_prototype_object_value_of */
 
@@ -89,12 +84,8 @@ ecma_builtin_object_prototype_object_value_of (ecma_value_t this_arg, /**< this 
  *         Returned value must be freed with ecma_free_value.
  */
 static ecma_value_t
-ecma_builtin_object_prototype_object_to_locale_string (ecma_value_t this_arg, /**< this argument */
-                                                       const ecma_value_t argv[], /**< routine's argument list */
-                                                       ecma_length_t argc) /**< number of arguments */
+ecma_builtin_object_prototype_object_to_locale_string (ecma_value_t this_arg) /**< this argument */
 {
-  JERRY_UNUSED (argv);
-  JERRY_UNUSED (argc);
   ecma_value_t return_value = ECMA_VALUE_EMPTY;
   /* 1. */
   ECMA_TRY_CATCH (obj_val,
@@ -137,15 +128,13 @@ ecma_builtin_object_prototype_object_to_locale_string (ecma_value_t this_arg, /*
  */
 static ecma_value_t
 ecma_builtin_object_prototype_object_has_own_property (ecma_value_t this_arg, /**< this argument */
-                                                       const ecma_value_t argv[], /**< routine's argument list */
-                                                       ecma_length_t argc) /**< number of arguments */
+                                                       ecma_value_t arg) /**< first argument */
 {
-  JERRY_UNUSED (argc);
   ecma_value_t return_value = ECMA_VALUE_EMPTY;
 
   /* 1. */
   ECMA_TRY_CATCH (to_string_val,
-                  ecma_op_to_string (argv[0]),
+                  ecma_op_to_string (arg),
                   return_value);
 
   /* 2. */
@@ -178,12 +167,10 @@ ecma_builtin_object_prototype_object_has_own_property (ecma_value_t this_arg, /*
  */
 static ecma_value_t
 ecma_builtin_object_prototype_object_is_prototype_of (ecma_value_t this_arg, /**< this argument */
-                                                      const ecma_value_t argv[], /**< routine's argument list */
-                                                      ecma_length_t argc) /**< number of arguments */
+                                                      ecma_value_t arg) /**< routine's first argument */
 {
-  JERRY_UNUSED (argc);
   /* 1. Is the argument an object? */
-  if (!ecma_is_value_object (argv[0]))
+  if (!ecma_is_value_object (arg))
   {
     return ECMA_VALUE_FALSE;
   }
@@ -199,7 +186,7 @@ ecma_builtin_object_prototype_object_is_prototype_of (ecma_value_t this_arg, /**
 
   /* 3. Compare prototype to object */
   ECMA_TRY_CATCH (v_obj_value,
-                  ecma_op_to_object (argv[0]),
+                  ecma_op_to_object (arg),
                   return_value);
 
   ecma_object_t *v_obj_p = ecma_get_object_from_value (v_obj_value);
@@ -224,15 +211,13 @@ ecma_builtin_object_prototype_object_is_prototype_of (ecma_value_t this_arg, /**
  */
 static ecma_value_t
 ecma_builtin_object_prototype_object_property_is_enumerable (ecma_value_t this_arg, /**< this argument */
-                                                             const ecma_value_t argv[], /**< routine's argument list */
-                                                             ecma_length_t argc) /**< number of arguments */
+                                                             ecma_value_t arg) /**< routine's first argument */
 {
-  JERRY_UNUSED (argc);
   ecma_value_t return_value = ECMA_VALUE_EMPTY;
 
   /* 1. */
   ECMA_TRY_CATCH (to_string_val,
-                  ecma_op_to_string (argv[0]),
+                  ecma_op_to_string (arg),
                   return_value);
 
   /* 2. */
@@ -268,49 +253,6 @@ ecma_builtin_object_prototype_object_property_is_enumerable (ecma_value_t this_a
 
   return return_value;
 } /* ecma_builtin_object_prototype_object_property_is_enumerable */
-
-const ecma_builtin_property_descriptor_t
-ecma_builtin_object_prototype_property_descriptor_list[] =
-{
-  { LIT_MAGIC_STRING_CONSTRUCTOR,
-    ECMA_BUILTIN_PROPERTY_OBJECT,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
-    { .value = ECMA_BUILTIN_ID_OBJECT }
-  },
-
-  /* Routine part */
-  { LIT_MAGIC_STRING_TO_STRING_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)),
-    { ecma_builtin_object_prototype_object_to_string }
-  },
-  { LIT_MAGIC_STRING_VALUE_OF_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)),
-    { ecma_builtin_object_prototype_object_value_of }
-  },
-  { LIT_MAGIC_STRING_TO_LOCALE_STRING_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)),
-    { ecma_builtin_object_prototype_object_to_locale_string }
-  },
-  { LIT_MAGIC_STRING_HAS_OWN_PROPERTY_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
-    { ecma_builtin_object_prototype_object_has_own_property }
-  },
-  { LIT_MAGIC_STRING_IS_PROTOTYPE_OF_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
-    { ecma_builtin_object_prototype_object_is_prototype_of }
-  },
-  { LIT_MAGIC_STRING_PROPERTY_IS_ENUMERABLE_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
-    { ecma_builtin_object_prototype_object_property_is_enumerable }
-  },
-  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
-};
 
 /**
  * @}

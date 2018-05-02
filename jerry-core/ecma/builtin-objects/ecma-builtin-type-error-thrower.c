@@ -14,7 +14,6 @@
  */
 
 #include "ecma-alloc.h"
-#include "ecma-builtin-type-error-thrower.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -27,6 +26,10 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-type-error-thrower.inc.h"
+#define BUILTIN_UNDERSCORED_ID type_error_thrower
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -73,18 +76,6 @@ ecma_builtin_type_error_thrower_dispatch_construct (const ecma_value_t *argument
   /* The object is not a constructor */
   return ecma_raise_type_error (ECMA_ERR_MSG (""));
 } /* ecma_builtin_type_error_thrower_dispatch_construct */
-
-/*
- * [[ThrowTypeError]] description
- *
- * See also: ECMA-262 v5, 13.2.3
- */
-const ecma_builtin_property_descriptor_t
-ecma_builtin_type_error_thrower_property_descriptor_list[] =
-{
-  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, 0, { .value = 0 } },
-  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
-};
 
 /**
  * @}

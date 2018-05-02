@@ -13,14 +13,46 @@
  * limitations under the License.
  */
 
-#ifndef ECMA_BUILTIN_OBJECT_H
-#define ECMA_BUILTIN_OBJECT_H
+/*
+ * Object built-in description
+ */
 
-#include "ecma-globals.h"
-#include "ecma-builtins.h"
+#include "ecma-builtin-helpers-macro-defines.inc.h"
 
-extern const ecma_builtin_property_descriptor_t ecma_builtin_object_property_descriptor_list[];
-ecma_value_t ecma_builtin_object_dispatch_call (const ecma_value_t *, ecma_length_t);
-ecma_value_t ecma_builtin_object_dispatch_construct (const ecma_value_t *, ecma_length_t);
+/* Number properties:
+ *  (property name, number value, writable, enumerable, configurable) */
 
-#endif /* !ECMA_BUILTIN_OBJECT_H */
+/* ECMA-262 v5, 15.2.3 */
+NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
+              1,
+              ECMA_PROPERTY_FIXED)
+
+/* Object properties:
+ *  (property name, object pointer getter) */
+
+/* ECMA-262 v5, 15.2.3.1 */
+OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
+              ECMA_BUILTIN_ID_OBJECT_PROTOTYPE,
+              ECMA_PROPERTY_FIXED)
+
+/* Routine properties:
+ *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
+ROUTINE (LIT_MAGIC_STRING_GET_PROTOTYPE_OF_UL, ecma_builtin_object_object_get_prototype_of, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_GET_OWN_PROPERTY_NAMES_UL, ecma_builtin_object_object_get_own_property_names, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_SEAL, ecma_builtin_object_object_seal, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_FREEZE, ecma_builtin_object_object_freeze, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_PREVENT_EXTENSIONS_UL, ecma_builtin_object_object_prevent_extensions, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_IS_SEALED_UL, ecma_builtin_object_object_is_sealed, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_IS_FROZEN_UL, ecma_builtin_object_object_is_frozen, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_IS_EXTENSIBLE, ecma_builtin_object_object_is_extensible, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_KEYS, ecma_builtin_object_object_keys, 1, 1)
+ROUTINE (LIT_MAGIC_STRING_GET_OWN_PROPERTY_DESCRIPTOR_UL, ecma_builtin_object_object_get_own_property_descriptor, 2, 2)
+ROUTINE (LIT_MAGIC_STRING_CREATE, ecma_builtin_object_object_create, 2, 2)
+ROUTINE (LIT_MAGIC_STRING_DEFINE_PROPERTIES_UL, ecma_builtin_object_object_define_properties, 2, 2)
+ROUTINE (LIT_MAGIC_STRING_DEFINE_PROPERTY_UL, ecma_builtin_object_object_define_property, 3, 3)
+
+#ifndef CONFIG_DISABLE_ES2015_BUILTIN
+ROUTINE (LIT_MAGIC_STRING_SET_PROTOTYPE_OF_UL, ecma_builtin_object_object_set_prototype_of, 2, 2)
+#endif /* !CONFIG_DISABLE_ES2015_BUILTIN */
+
+#include "ecma-builtin-helpers-macro-undefs.inc.h"

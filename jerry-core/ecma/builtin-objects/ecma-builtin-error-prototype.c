@@ -14,7 +14,6 @@
  */
 
 #include "ecma-alloc.h"
-#include "ecma-builtin-error-prototype.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -26,6 +25,13 @@
 #include "ecma-try-catch-macro.h"
 #include "jrt.h"
 #include "lit-magic-strings.h"
+
+#define ECMA_BUILTINS_INTERNAL
+#include "ecma-builtins-internal.h"
+
+#define BUILTIN_INC_HEADER_NAME "ecma-builtin-error-prototype.inc.h"
+#define BUILTIN_UNDERSCORED_ID error_prototype
+#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -47,12 +53,8 @@
  *         Returned value must be freed with ecma_free_value.
  */
 static ecma_value_t
-ecma_builtin_error_prototype_object_to_string (ecma_value_t this_arg, /**< this argument */
-                                               const ecma_value_t argv[], /**< routine's argument list */
-                                               ecma_length_t argc) /**< number of arguments */
+ecma_builtin_error_prototype_object_to_string (ecma_value_t this_arg) /**< this argument */
 {
-  JERRY_UNUSED (argv);
-  JERRY_UNUSED (argc);
   ecma_value_t ret_value = ECMA_VALUE_EMPTY;
 
   /* 2. */
@@ -173,39 +175,6 @@ ecma_builtin_error_prototype_object_to_string (ecma_value_t this_arg, /**< this 
 
   return ret_value;
 } /* ecma_builtin_error_prototype_object_to_string */
-
-/*
- * Error.prototype built-in description
- */
-const ecma_builtin_property_descriptor_t
-ecma_builtin_error_prototype_property_descriptor_list[] =
-{
-  /* ECMA-262 v5, 15.11.4.1 */
-  { LIT_MAGIC_STRING_CONSTRUCTOR,
-    ECMA_BUILTIN_PROPERTY_OBJECT,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
-    { .value = ECMA_BUILTIN_ID_ERROR }
-  },
-  /* ECMA-262 v5, 15.11.4.2 */
-  { LIT_MAGIC_STRING_NAME,
-    ECMA_BUILTIN_PROPERTY_STRING,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
-    { .value = LIT_MAGIC_STRING_ERROR_UL }
-  },
-  /* ECMA-262 v5, 15.11.4.3 */
-  { LIT_MAGIC_STRING_MESSAGE,
-    ECMA_BUILTIN_PROPERTY_STRING,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE),
-    { .value = LIT_MAGIC_STRING__EMPTY }
-  },
-  /* Routine part */
-  { LIT_MAGIC_STRING_TO_STRING_UL,
-    ECMA_BUILTIN_PROPERTY_ROUTINE,
-    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)),
-    { ecma_builtin_error_prototype_object_to_string }
-  },
-  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
-};
 
 /**
  * @}
