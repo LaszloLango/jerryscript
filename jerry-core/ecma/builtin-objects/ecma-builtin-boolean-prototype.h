@@ -13,27 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Boolean.prototype description
- */
+#ifndef ECMA_BUILTIN_BOOLEAN_PROTOTYPE_H
+#define ECMA_BUILTIN_BOOLEAN_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_BOOLEAN_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_boolean_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_boolean_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_boolean_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_BOOLEAN_PROTOTYPE_H */
 
-/* ECMA-262 v5, 15.6.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_BOOLEAN,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_boolean_prototype_object_to_string, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_VALUE_OF_UL,  ecma_builtin_boolean_prototype_object_value_of,  0, 0)
-
-#endif /* !CONFIG_DISABLE_BOOLEAN_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

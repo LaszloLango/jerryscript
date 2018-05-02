@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-date.h"
 #include "ecma-builtin-helpers.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -25,13 +26,6 @@
 #include "math.h"
 
 #ifndef CONFIG_DISABLE_DATE_BUILTIN
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-date.inc.h"
-#define BUILTIN_UNDERSCORED_ID date
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -565,6 +559,17 @@ ecma_builtin_date_dispatch_construct (const ecma_value_t *arguments_list_p, /**<
 
   return ret_value;
 } /* ecma_builtin_date_dispatch_construct */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_date_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_DATE_PROTOTYPE } },
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 7 } },
+{ LIT_MAGIC_STRING_PARSE, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_date_parse } },
+{ LIT_MAGIC_STRING_UTC_U, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (7)), { ecma_builtin_date_utc } },
+{ LIT_MAGIC_STRING_NOW, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_date_now } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

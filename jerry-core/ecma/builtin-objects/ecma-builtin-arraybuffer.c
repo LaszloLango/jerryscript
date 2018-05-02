@@ -24,13 +24,6 @@
 
 #ifndef CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-arraybuffer.inc.h"
-#define BUILTIN_UNDERSCORED_ID arraybuffer
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -93,6 +86,15 @@ ecma_builtin_arraybuffer_dispatch_construct (const ecma_value_t *arguments_list_
 
   return ecma_op_create_arraybuffer_object (arguments_list_p, arguments_list_len);
 } /* ecma_builtin_arraybuffer_dispatch_construct */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_arraybuffer_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_ARRAYBUFFER_PROTOTYPE } },
+{ LIT_MAGIC_STRING_IS_VIEW_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_arraybuffer_object_is_view } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

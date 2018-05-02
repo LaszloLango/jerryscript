@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-object.h"
 #include "ecma-builtin-helpers.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
@@ -25,13 +26,6 @@
 #include "ecma-objects-general.h"
 #include "ecma-try-catch-macro.h"
 #include "jrt.h"
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-object.inc.h"
-#define BUILTIN_UNDERSCORED_ID object
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -750,61 +744,6 @@ ecma_builtin_object_object_get_own_property_descriptor (ecma_value_t this_arg, /
 } /* ecma_builtin_object_object_get_own_property_descriptor */
 
 /**
- * The Object object's 'create' routine
- *
- * See also:
- *          ECMA-262 v5, 15.2.3.5
- *
- * @return ecma value
- *         Returned value must be freed with ecma_free_value.
- */
-static ecma_value_t
-ecma_builtin_object_object_create (ecma_value_t this_arg, /**< 'this' argument */
-                                   ecma_value_t arg1, /**< routine's first argument */
-                                   ecma_value_t arg2) /**< routine's second argument */
-{
-  ecma_value_t ret_value = ECMA_VALUE_EMPTY;
-
-  /* 1. */
-  if (!ecma_is_value_object (arg1) && !ecma_is_value_null (arg1))
-  {
-    ret_value = ecma_raise_type_error (ECMA_ERR_MSG ("Argument is not an object."));
-  }
-  else
-  {
-    ecma_object_t *obj_p = NULL;
-
-    if (!ecma_is_value_null (arg1))
-    {
-      obj_p = ecma_get_object_from_value (arg1);
-    }
-    /* 2-3. */
-    ecma_object_t *result_obj_p = ecma_op_create_object_object_noarg_and_set_prototype (obj_p);
-
-    /* 4. */
-    if (!ecma_is_value_undefined (arg2))
-    {
-      ECMA_TRY_CATCH (obj,
-                      ecma_builtin_object_object_define_properties (this_arg,
-                                                                    ecma_make_object_value (result_obj_p),
-                                                                    arg2),
-                      ret_value);
-      ECMA_FINALIZE (obj);
-    }
-
-    /* 5. */
-    if (ecma_is_value_empty (ret_value))
-    {
-      ret_value = ecma_copy_value (ecma_make_object_value (result_obj_p));
-    }
-
-    ecma_deref_object (result_obj_p);
-  }
-
-  return ret_value;
-} /* ecma_builtin_object_object_create */
-
-/**
  * The Object object's 'defineProperties' routine
  *
  * See also:
@@ -912,6 +851,61 @@ ecma_builtin_object_object_define_properties (ecma_value_t this_arg, /**< 'this'
 } /* ecma_builtin_object_object_define_properties */
 
 /**
+ * The Object object's 'create' routine
+ *
+ * See also:
+ *          ECMA-262 v5, 15.2.3.5
+ *
+ * @return ecma value
+ *         Returned value must be freed with ecma_free_value.
+ */
+static ecma_value_t
+ecma_builtin_object_object_create (ecma_value_t this_arg, /**< 'this' argument */
+                                   ecma_value_t arg1, /**< routine's first argument */
+                                   ecma_value_t arg2) /**< routine's second argument */
+{
+  ecma_value_t ret_value = ECMA_VALUE_EMPTY;
+
+  /* 1. */
+  if (!ecma_is_value_object (arg1) && !ecma_is_value_null (arg1))
+  {
+    ret_value = ecma_raise_type_error (ECMA_ERR_MSG ("Argument is not an object."));
+  }
+  else
+  {
+    ecma_object_t *obj_p = NULL;
+
+    if (!ecma_is_value_null (arg1))
+    {
+      obj_p = ecma_get_object_from_value (arg1);
+    }
+    /* 2-3. */
+    ecma_object_t *result_obj_p = ecma_op_create_object_object_noarg_and_set_prototype (obj_p);
+
+    /* 4. */
+    if (!ecma_is_value_undefined (arg2))
+    {
+      ECMA_TRY_CATCH (obj,
+                      ecma_builtin_object_object_define_properties (this_arg,
+                                                                    ecma_make_object_value (result_obj_p),
+                                                                    arg2),
+                      ret_value);
+      ECMA_FINALIZE (obj);
+    }
+
+    /* 5. */
+    if (ecma_is_value_empty (ret_value))
+    {
+      ret_value = ecma_copy_value (ecma_make_object_value (result_obj_p));
+    }
+
+    ecma_deref_object (result_obj_p);
+  }
+
+  return ret_value;
+} /* ecma_builtin_object_object_create */
+
+/**
  * The Object object's 'defineProperty' routine
  *
  * See also:
@@ -972,3 +966,85 @@ ecma_builtin_object_object_define_property (ecma_value_t this_arg, /**< 'this' a
  * @}
  * @}
  */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_object_property_descriptor_list[] =
+{
+  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+  { LIT_MAGIC_STRING_PROTOTYPE,
+    ECMA_BUILTIN_PROPERTY_OBJECT,
+    ECMA_PROPERTY_FIXED,
+    { .value = ECMA_BUILTIN_ID_OBJECT_PROTOTYPE }
+  },
+  { LIT_MAGIC_STRING_GET_PROTOTYPE_OF_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_get_prototype_of }
+  },
+  { LIT_MAGIC_STRING_GET_OWN_PROPERTY_NAMES_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_get_own_property_names }
+  },
+  { LIT_MAGIC_STRING_SEAL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_seal }
+  },
+  { LIT_MAGIC_STRING_FREEZE,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_freeze }
+  },
+  { LIT_MAGIC_STRING_PREVENT_EXTENSIONS_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_prevent_extensions }
+  },
+  { LIT_MAGIC_STRING_IS_SEALED_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_is_sealed }
+  },
+  { LIT_MAGIC_STRING_IS_FROZEN_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_is_frozen }
+  },
+  { LIT_MAGIC_STRING_IS_EXTENSIBLE,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_is_extensible }
+  },
+  { LIT_MAGIC_STRING_KEYS,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)),
+    { ecma_builtin_object_object_keys }
+  },
+  { LIT_MAGIC_STRING_GET_OWN_PROPERTY_DESCRIPTOR_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
+    { ecma_builtin_object_object_get_own_property_descriptor }
+  },
+  { LIT_MAGIC_STRING_CREATE,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
+    { ecma_builtin_object_object_create }
+  },
+  { LIT_MAGIC_STRING_DEFINE_PROPERTIES_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
+    { ecma_builtin_object_object_define_properties }
+  },
+  { LIT_MAGIC_STRING_DEFINE_PROPERTY_UL,
+    ECMA_BUILTIN_PROPERTY_ROUTINE,
+    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (3)),
+    { ecma_builtin_object_object_define_property }
+  },
+//  { LIT_MAGIC_STRING_SET_PROTOTYPE_OF_UL,
+//    ECMA_BUILTIN_PROPERTY_ROUTINE,
+//    (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)),
+//    { ecma_builtin_object_object_set_prototype_of }
+//  },
+  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};

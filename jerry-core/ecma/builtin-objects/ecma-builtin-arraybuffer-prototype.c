@@ -26,13 +26,6 @@
 
 #ifndef CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-arraybuffer-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID arraybuffer_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -136,6 +129,14 @@ ecma_builtin_arraybuffer_prototype_object_slice (ecma_value_t this_arg, /**< thi
 
   return ecma_make_object_value (new_arraybuffer_p);
 } /* ecma_builtin_arraybuffer_prototype_object_slice */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_arraybuffer_prototype_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_ARRAYBUFFER } },
+{ LIT_MAGIC_STRING_SLICE, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)), { ecma_builtin_arraybuffer_prototype_object_slice } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

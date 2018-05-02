@@ -13,55 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Number built-in description
- */
+#ifndef ECMA_BUILTIN_NUMBER_H
+#define ECMA_BUILTIN_NUMBER_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_NUMBER_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_number_property_descriptor_list[];
+ecma_value_t ecma_builtin_number_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_number_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Number properties:
- *  (property name, number value, writable, enumerable, configurable) */
+#endif /* !ECMA_BUILTIN_NUMBER_H */
 
-/* ECMA-262 v5, 15.7.3 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.7.3.4 */
-NUMBER_VALUE (LIT_MAGIC_STRING_NAN,
-              ECMA_BUILTIN_NUMBER_NAN,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.7.3.2 */
-NUMBER_VALUE (LIT_MAGIC_STRING_MAX_VALUE_U,
-              ECMA_BUILTIN_NUMBER_MAX,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.7.3.3 */
-NUMBER_VALUE (LIT_MAGIC_STRING_MIN_VALUE_U,
-              ECMA_BUILTIN_NUMBER_MIN,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.7.3.5 */
-NUMBER_VALUE (LIT_MAGIC_STRING_POSITIVE_INFINITY_U,
-              ECMA_BUILTIN_NUMBER_POSITIVE_INFINITY,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.7.3.6 */
-NUMBER_VALUE (LIT_MAGIC_STRING_NEGATIVE_INFINITY_U,
-              ECMA_BUILTIN_NUMBER_NEGATIVE_INFINITY,
-              ECMA_PROPERTY_FIXED)
-
-/* Object properties:
- *  (property name, object pointer getter) */
-
-/* ECMA-262 v5, 15.7.3.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_NUMBER_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-#endif /* !CONFIG_DISABLE_NUMBER_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-syntaxerror.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -26,13 +27,6 @@
 #include "jrt.h"
 
 #ifndef CONFIG_DISABLE_ERROR_BUILTINS
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-syntaxerror.inc.h"
-#define BUILTIN_UNDERSCORED_ID syntax_error
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -67,6 +61,14 @@ ecma_builtin_syntax_error_dispatch_construct (const ecma_value_t *arguments_list
 {
   return ecma_builtin_syntax_error_dispatch_call (arguments_list_p, arguments_list_len);
 } /* ecma_builtin_syntax_error_dispatch_construct */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_syntax_error_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_SYNTAX_ERROR_PROTOTYPE } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

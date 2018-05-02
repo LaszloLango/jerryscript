@@ -33,13 +33,6 @@
 
 #ifndef CONFIG_DISABLE_JSON_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-json.inc.h"
-#define BUILTIN_UNDERSCORED_ID json
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /**
  * The number of expected hexidecimal characters in a hex escape sequence
  */
@@ -1799,6 +1792,14 @@ ecma_builtin_json_array (ecma_object_t *obj_p, /**< the array object*/
   /* 13. */
   return ret_value;
 } /* ecma_builtin_json_array */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_json_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_PARSE, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)), { ecma_builtin_json_parse } },
+{ LIT_MAGIC_STRING_STRINGIFY, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (3)), { ecma_builtin_json_stringify } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

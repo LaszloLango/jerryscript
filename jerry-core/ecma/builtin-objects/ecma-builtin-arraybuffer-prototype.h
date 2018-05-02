@@ -13,30 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * ArrayBuffer.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_ARRAYBUFFER_PROTOTYPE_H
+#define ECMA_BUILTIN_ARRAYBUFFER_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_arraybuffer_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_arraybuffer_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_arraybuffer_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_ARRAYBUFFER_PROTOTYPE_H */
 
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_ARRAYBUFFER,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* Readonly accessor properties */
-ACCESSOR_READ_ONLY (LIT_MAGIC_STRING_BYTE_LENGTH_UL,
-                    ecma_builtin_arraybuffer_prototype_bytelength_getter,
-                    ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_SLICE, ecma_builtin_arraybuffer_prototype_object_slice, 2, 2)
-
-#endif /* !CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

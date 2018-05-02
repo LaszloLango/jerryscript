@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-string.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -29,10 +30,6 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-string.inc.h"
-#define BUILTIN_UNDERSCORED_ID string
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -144,6 +141,15 @@ ecma_builtin_string_dispatch_construct (const ecma_value_t *arguments_list_p, /*
 
   return ecma_op_create_string_object (arguments_list_p, arguments_list_len);
 } /* ecma_builtin_string_dispatch_construct */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_string_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_STRING_PROTOTYPE } },
+{ LIT_MAGIC_STRING_FROM_CHAR_CODE_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_string_object_from_char_code } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

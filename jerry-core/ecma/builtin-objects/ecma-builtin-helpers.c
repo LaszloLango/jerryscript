@@ -689,3 +689,9 @@ ecma_builtin_helper_def_prop (ecma_object_t *obj_p, /**< object */
  * @}
  * @}
  */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_helpers_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};

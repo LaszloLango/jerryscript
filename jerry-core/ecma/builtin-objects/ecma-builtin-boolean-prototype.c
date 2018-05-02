@@ -27,13 +27,6 @@
 
 #ifndef CONFIG_DISABLE_BOOLEAN_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-boolean-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID boolean_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -43,6 +36,39 @@
  * \addtogroup booleanprototype ECMA Boolean.prototype object built-in
  * @{
  */
+
+/**
+ * The Boolean.prototype object's 'valueOf' routine
+ *
+ * See also:
+ *          ECMA-262 v5, 15.6.4.3
+ *
+ * @return ecma value
+ *         Returned value must be freed with ecma_free_value.
+ */
+static ecma_value_t
+ecma_builtin_boolean_prototype_object_value_of (ecma_value_t this_arg) /**< this argument */
+{
+  if (ecma_is_value_boolean (this_arg))
+  {
+    return this_arg;
+  }
+  else if (ecma_is_value_object (this_arg))
+  {
+    ecma_object_t *object_p = ecma_get_object_from_value (this_arg);
+
+    if (ecma_object_class_is (object_p, LIT_MAGIC_STRING_BOOLEAN_UL))
+    {
+      ecma_extended_object_t *ext_object_p = (ecma_extended_object_t *) object_p;
+
+      JERRY_ASSERT (ecma_is_value_boolean (ext_object_p->u.class_prop.u.value));
+
+      return ext_object_p->u.class_prop.u.value;
+    }
+  }
+
+  return ecma_raise_type_error (ECMA_ERR_MSG ("Argument 'this' is not a Boolean object."));
+} /* ecma_builtin_boolean_prototype_object_value_of */
 
 /**
  * The Boolean.prototype object's 'toString' routine
@@ -78,38 +104,14 @@ ecma_builtin_boolean_prototype_object_to_string (ecma_value_t this_arg) /**< thi
   return ret_value;
 } /* ecma_builtin_boolean_prototype_object_to_string */
 
-/**
- * The Boolean.prototype object's 'valueOf' routine
- *
- * See also:
- *          ECMA-262 v5, 15.6.4.3
- *
- * @return ecma value
- *         Returned value must be freed with ecma_free_value.
- */
-static ecma_value_t
-ecma_builtin_boolean_prototype_object_value_of (ecma_value_t this_arg) /**< this argument */
+const ecma_builtin_property_descriptor_t
+ecma_builtin_boolean_prototype_property_descriptor_list[] =
 {
-  if (ecma_is_value_boolean (this_arg))
-  {
-    return this_arg;
-  }
-  else if (ecma_is_value_object (this_arg))
-  {
-    ecma_object_t *object_p = ecma_get_object_from_value (this_arg);
-
-    if (ecma_object_class_is (object_p, LIT_MAGIC_STRING_BOOLEAN_UL))
-    {
-      ecma_extended_object_t *ext_object_p = (ecma_extended_object_t *) object_p;
-
-      JERRY_ASSERT (ecma_is_value_boolean (ext_object_p->u.class_prop.u.value));
-
-      return ext_object_p->u.class_prop.u.value;
-    }
-  }
-
-  return ecma_raise_type_error (ECMA_ERR_MSG ("Argument 'this' is not a Boolean object."));
-} /* ecma_builtin_boolean_prototype_object_value_of */
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_BOOLEAN } },
+{ LIT_MAGIC_STRING_TO_STRING_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_boolean_prototype_object_to_string } },
+{ LIT_MAGIC_STRING_VALUE_OF_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_boolean_prototype_object_value_of } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

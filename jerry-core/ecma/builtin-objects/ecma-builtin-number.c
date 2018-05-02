@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-number.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -29,10 +30,6 @@
 
 #define ECMA_BUILTINS_INTERNAL
 #include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-number.inc.h"
-#define BUILTIN_UNDERSCORED_ID number
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -90,6 +87,19 @@ ecma_builtin_number_dispatch_construct (const ecma_value_t *arguments_list_p, /*
     return ecma_op_create_number_object (arguments_list_p[0]);
   }
 } /* ecma_builtin_number_dispatch_construct */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_number_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+{ LIT_MAGIC_STRING_NAN, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_NUMBER_NAN } },
+{ LIT_MAGIC_STRING_MAX_VALUE_U, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_NUMBER_MAX } },
+{ LIT_MAGIC_STRING_MIN_VALUE_U, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_NUMBER_MIN } },
+{ LIT_MAGIC_STRING_POSITIVE_INFINITY_U, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_NUMBER_POSITIVE_INFINITY } },
+{ LIT_MAGIC_STRING_NEGATIVE_INFINITY_U, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_NUMBER_NEGATIVE_INFINITY } },
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_NUMBER_PROTOTYPE } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

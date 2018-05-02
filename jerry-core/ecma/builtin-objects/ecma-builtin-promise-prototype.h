@@ -13,24 +13,15 @@
  * limitations under the License.
  */
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#ifndef ECMA_BUILTIN_PROMISE_PROTOTYPE_H
+#define ECMA_BUILTIN_PROMISE_PROTOTYPE_H
 
-#ifndef CONFIG_DISABLE_ES2015_PROMISE_BUILTIN
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Object properties:
- *  (property name, object pointer getter) */
+extern const ecma_builtin_property_descriptor_t ecma_builtin_promise_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_promise_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_promise_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_PROMISE,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !ECMA_BUILTIN_PROMISE_PROTOTYPE_H */
 
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FLAG_WRITABLE)
-
-ROUTINE (LIT_MAGIC_STRING_THEN, ecma_builtin_promise_prototype_then, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_CATCH, ecma_builtin_promise_prototype_catch, 1, 1)
-
-#endif /* !CONFIG_DISABLE_ES2015_PROMISE_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

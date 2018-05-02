@@ -754,7 +754,33 @@ ecma_builtin_dispatch_routine (ecma_builtin_id_t builtin_object_id, /**< built-i
 {
   JERRY_ASSERT (builtin_object_id < ECMA_BUILTIN_ID__COUNT);
   const ecma_builtin_property_descriptor_t *prop_desc_p = ecma_builtins[builtin_object_id].property_list;
-  return prop_desc_p[builtin_routine_id].u.routine_p (this_arg_value, argv, argc);
+  uint8_t length = ECMA_GET_ROUTINE_LENGTH (prop_desc_p->attributes);
+  switch (length) {
+    case 0:
+    {
+      ecma_builtin_routine0_t fn = (ecma_builtin_routine0_t) prop_desc_p[builtin_routine_id].u.routine_p;
+      JERRY_UNUSED (argv);
+      JERRY_UNUSED (argc);
+      return fn (this_arg_value);
+    }
+    case 1:
+    {
+      ecma_builtin_routine1_t fn = (ecma_builtin_routine1_t) prop_desc_p[builtin_routine_id].u.routine_p;
+      JERRY_UNUSED (argc);
+      return fn (this_arg_value, argv[0]);
+    }
+    case 2:
+    {
+      ecma_builtin_routine2_t fn = (ecma_builtin_routine2_t) prop_desc_p[builtin_routine_id].u.routine_p;
+      JERRY_UNUSED (argc);
+      return fn (this_arg_value, argv[0], argv[1]);
+    }
+    default:
+    {
+      ecma_builtin_routine_non_fixed_t fn = (ecma_builtin_routine_non_fixed_t) prop_desc_p[builtin_routine_id].u.routine_p;
+      return fn (this_arg_value, argv, argc);
+    }
+  }
 } /* ecma_builtin_dispatch_routine */
 
 /**

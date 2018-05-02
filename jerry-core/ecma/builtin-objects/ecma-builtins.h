@@ -52,29 +52,41 @@ typedef enum
 {
   ECMA_BUILTIN_ID_OBJECT_PROTOTYPE,
   ECMA_BUILTIN_ID_OBJECT,
-#if 0
+#ifndef CONFIG_DISABLE_ARRAY_BUILTIN
   ECMA_BUILTIN_ID_ARRAY_PROTOTYPE,
   ECMA_BUILTIN_ID_ARRAY,
+#endif /* !CONFIG_DISABLE_ARRAY_BUILTIN*/
+#ifndef CONFIG_DISABLE_STRING_BUILTIN
   ECMA_BUILTIN_ID_STRING_PROTOTYPE,
   ECMA_BUILTIN_ID_STRING,
+#endif /* !CONFIG_DISABLE_STRING_BUILTIN */
+#ifndef CONFIG_DISABLE_BOOLEAN_BUILTIN
   ECMA_BUILTIN_ID_BOOLEAN_PROTOTYPE,
   ECMA_BUILTIN_ID_BOOLEAN,
+#endif /* !CONFIG_DISABLE_BOOLEAN_BUILTIN */
+#ifndef CONFIG_DISABLE_NUMBER_BUILTIN
   ECMA_BUILTIN_ID_NUMBER_PROTOTYPE,
   ECMA_BUILTIN_ID_NUMBER,
-#endif
+#endif /* !CONFIG_DISABLE_NUMBER_BUILTIN */
   ECMA_BUILTIN_ID_FUNCTION_PROTOTYPE,
   ECMA_BUILTIN_ID_FUNCTION,
-#if 0
+#ifndef CONFIG_DISABLE_MATH_BUILTIN
   ECMA_BUILTIN_ID_MATH,
+#endif /* !CONFIG_DISABLE_MATH_BUILTIN */
+#ifndef CONFIG_DISABLE_JSON_BUILTIN
   ECMA_BUILTIN_ID_JSON,
+#endif /* !CONFIG_DISABLE_JSON_BUILTIN */
+#ifndef CONFIG_DISABLE_DATE_BUILTIN
   ECMA_BUILTIN_ID_DATE_PROTOTYPE,
   ECMA_BUILTIN_ID_DATE,
+#endif /* !CONFIG_DISABLE_DATE_BUILTIN */
+#ifndef CONFIG_DISABLE_REGEXP_BUILTIN
   ECMA_BUILTIN_ID_REGEXP_PROTOTYPE,
   ECMA_BUILTIN_ID_REGEXP,
-#endif
+#endif /* !CONFIG_DISABLE_REGEXP_BUILTIN */
   ECMA_BUILTIN_ID_ERROR,
   ECMA_BUILTIN_ID_ERROR_PROTOTYPE,
-#if 0
+#ifndef CONFIG_DISABLE_ERROR_BUILTINS
   ECMA_BUILTIN_ID_EVAL_ERROR_PROTOTYPE,
   ECMA_BUILTIN_ID_EVAL_ERROR,
   ECMA_BUILTIN_ID_RANGE_ERROR_PROTOTYPE,
@@ -87,7 +99,7 @@ typedef enum
   ECMA_BUILTIN_ID_TYPE_ERROR,
   ECMA_BUILTIN_ID_URI_ERROR_PROTOTYPE,
   ECMA_BUILTIN_ID_URI_ERROR,
-#endif
+#endif /* !CONFIG_DISABLE_ERROR_BUILTINS */
   ECMA_BUILTIN_ID_TYPE_ERROR_THROWER,
   ECMA_BUILTIN_ID_GLOBAL,
   ECMA_BUILTIN_ID__COUNT
@@ -111,10 +123,18 @@ typedef enum
 /**
  * Function pointer of built-in routines
  */
-typedef ecma_value_t (*ecma_builtin_routine_t)(ecma_value_t this_arg,
-                                               const ecma_value_t argv[],
-                                               ecma_length_t argc);
+typedef ecma_value_t (*ecma_builtin_routine0_t)(ecma_value_t this_arg);
 
+typedef ecma_value_t (*ecma_builtin_routine1_t)(ecma_value_t this_arg,
+                                                ecma_value_t arg);
+
+typedef ecma_value_t (*ecma_builtin_routine2_t)(ecma_value_t this_arg,
+                                               ecma_value_t arg1,
+                                               ecma_value_t arg2);
+
+typedef ecma_value_t (*ecma_builtin_routine_non_fixed_t)(ecma_value_t this_arg,
+                                                         const ecma_value_t argv[],
+                                                         ecma_length_t argc);
 /**
  * Description of built-in properties.
  */
@@ -124,7 +144,11 @@ typedef struct
   uint8_t type; /**< type of the property */
   uint8_t attributes; /**< attributes of the property */
   union {
-    ecma_builtin_routine_t routine_p; /**< pointer to the builtin routine */
+    void *routine_p;
+//    ecma_builtin_routine0_t *routine0_p; /**< pointer to the builtin routine */
+//    ecma_builtin_routine1_t *routine1_p; /**< pointer to the builtin routine */
+//    ecma_builtin_routine2_t *routine2_p; /**< pointer to the builtin routine */
+//    ecma_builtin_routine_non_fixed_t *routine_non_fixed_p; /**< pointer to the builtin routine */
     uint16_t value; /**< value of the property */
   } u;
 } ecma_builtin_property_descriptor_t;

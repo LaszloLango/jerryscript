@@ -13,51 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * RegExp.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_REGEXP_PROTOTYPE_H
+#define ECMA_BUILTIN_REGEXP_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_REGEXP_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_regexp_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_regexp_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_regexp_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* ECMA-262 v5, 15.10.6.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_REGEXP,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !ECMA_BUILTIN_REGEXP_PROTOTYPE_H */
 
-/* ECMA-262 v5, 15.10.7.1 */
-STRING_VALUE (LIT_MAGIC_STRING_SOURCE,
-              LIT_MAGIC_STRING_EMPTY_NON_CAPTURE_GROUP,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.10.7.2 */
-SIMPLE_VALUE (LIT_MAGIC_STRING_GLOBAL,
-              ECMA_VALUE_FALSE,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.10.7.3 */
-SIMPLE_VALUE (LIT_MAGIC_STRING_IGNORECASE_UL,
-              ECMA_VALUE_FALSE,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.10.7.4 */
-SIMPLE_VALUE (LIT_MAGIC_STRING_MULTILINE,
-              ECMA_VALUE_FALSE,
-              ECMA_PROPERTY_FIXED)
-
-/* ECMA-262 v5, 15.10.7.5 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LASTINDEX_UL,
-              0,
-              ECMA_PROPERTY_FLAG_WRITABLE)
-
-#ifndef CONFIG_DISABLE_ANNEXB_BUILTIN
-ROUTINE (LIT_MAGIC_STRING_COMPILE, ecma_builtin_regexp_prototype_compile, 2, 1)
-#endif /* !CONFIG_DISABLE_ANNEXB_BUILTIN */
-ROUTINE (LIT_MAGIC_STRING_EXEC, ecma_builtin_regexp_prototype_exec, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_TEST, ecma_builtin_regexp_prototype_test, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_regexp_prototype_to_string, 0, 0)
-
-#endif /* !CONFIG_DISABLE_REGEXP_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

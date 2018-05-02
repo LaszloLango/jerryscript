@@ -18,13 +18,6 @@
 
 #ifndef CONFIG_DISABLE_ES2015_PROMISE_BUILTIN
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-promise-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID promise_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -69,6 +62,16 @@ ecma_builtin_promise_prototype_catch (ecma_value_t this_arg, /**< this argument 
                             ECMA_VALUE_UNDEFINED,
                             on_rejected);
 } /* ecma_builtin_promise_prototype_catch */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_promise_prototype_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_PROMISE } },
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FLAG_WRITABLE, { .value = 1 } },
+{ LIT_MAGIC_STRING_THEN, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)), { ecma_builtin_promise_prototype_then } },
+{ LIT_MAGIC_STRING_CATCH, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_promise_prototype_catch } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

@@ -16,6 +16,7 @@
 #include "ecma-alloc.h"
 #include "ecma-array-object.h"
 #include "ecma-builtin-helpers.h"
+#include "ecma-builtins.h"
 #include "ecma-exceptions.h"
 #include "ecma-gc.h"
 #include "ecma-globals.h"
@@ -27,9 +28,6 @@
 #include "re-compiler.h"
 
 #ifndef CONFIG_DISABLE_REGEXP_BUILTIN
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
 
 /** \addtogroup ecma ECMA
  * @{

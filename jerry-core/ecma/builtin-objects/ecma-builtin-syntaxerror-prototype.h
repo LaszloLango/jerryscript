@@ -13,32 +13,13 @@
  * limitations under the License.
  */
 
-/*
- * SyntaxError.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_SYNTAXERROR_PROTOTYPE_H
+#define ECMA_BUILTIN_SYNTAXERROR_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_ERROR_BUILTINS
+extern const ecma_builtin_property_descriptor_t ecma_builtin_syntax_error_prototype_property_descriptor_list[];
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_SYNTAXERROR_PROTOTYPE_H */
 
-/* ECMA-262 v5, 15.11.7.8 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_SYNTAX_ERROR,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* ECMA-262 v5, 15.11.7.9 */
-STRING_VALUE (LIT_MAGIC_STRING_NAME,
-              LIT_MAGIC_STRING_SYNTAX_ERROR_UL,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* ECMA-262 v5, 15.11.7.10 */
-STRING_VALUE (LIT_MAGIC_STRING_MESSAGE,
-              LIT_MAGIC_STRING__EMPTY,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-#endif /* CONFIG_DISABLE_ERROR_BUILTINS */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

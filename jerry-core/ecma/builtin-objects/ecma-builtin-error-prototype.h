@@ -13,32 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Error.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_ERROR_PROTOTYPE_H
+#define ECMA_BUILTIN_ERROR_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Object properties:
- *  (property name, object pointer getter) */
+extern const ecma_builtin_property_descriptor_t ecma_builtin_error_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_error_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_error_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* ECMA-262 v5, 15.11.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_ERROR,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !ECMA_BUILTIN_ERROR_PROTOTYPE_H */
 
-/* ECMA-262 v5, 15.11.4.2 */
-STRING_VALUE (LIT_MAGIC_STRING_NAME,
-              LIT_MAGIC_STRING_ERROR_UL,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* ECMA-262 v5, 15.11.4.3 */
-STRING_VALUE (LIT_MAGIC_STRING_MESSAGE,
-              LIT_MAGIC_STRING__EMPTY,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_error_prototype_object_to_string, 0, 0)
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

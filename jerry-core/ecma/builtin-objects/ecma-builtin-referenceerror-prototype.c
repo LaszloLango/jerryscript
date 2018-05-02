@@ -27,11 +27,13 @@
 
 #ifndef CONFIG_DISABLE_ERROR_BUILTINS
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-referenceerror-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID reference_error_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
+const ecma_builtin_property_descriptor_t
+ecma_builtin_reference_error_prototype_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_REFERENCE_ERROR } },
+{ LIT_MAGIC_STRING_NAME, ECMA_BUILTIN_PROPERTY_STRING, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = LIT_MAGIC_STRING_REFERENCE_ERROR_UL } },
+{ LIT_MAGIC_STRING_MESSAGE, ECMA_BUILTIN_PROPERTY_STRING, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = LIT_MAGIC_STRING__EMPTY } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 #endif /* !CONFIG_DISABLE_ERROR_BUILTINS */

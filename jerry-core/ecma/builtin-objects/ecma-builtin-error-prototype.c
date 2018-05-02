@@ -26,13 +26,6 @@
 #include "jrt.h"
 #include "lit-magic-strings.h"
 
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-error-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID error_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
-
 /** \addtogroup ecma ECMA
  * @{
  *
@@ -181,3 +174,13 @@ ecma_builtin_error_prototype_object_to_string (ecma_value_t this_arg) /**< this 
  * @}
  * @}
  */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_error_prototype_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_ERROR } },
+{ LIT_MAGIC_STRING_NAME, ECMA_BUILTIN_PROPERTY_STRING, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = LIT_MAGIC_STRING_ERROR_UL } },
+{ LIT_MAGIC_STRING_MESSAGE, ECMA_BUILTIN_PROPERTY_STRING, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = LIT_MAGIC_STRING__EMPTY } },
+{ LIT_MAGIC_STRING_TO_STRING_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_error_prototype_object_to_string } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};

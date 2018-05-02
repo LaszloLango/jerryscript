@@ -13,33 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Function.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_FUNCTION_PROTOTYPE_H
+#define ECMA_BUILTIN_FUNCTION_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Object properties:
- *  (property name, object pointer getter) */
+extern const ecma_builtin_property_descriptor_t ecma_builtin_function_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_function_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_function_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* ECMA-262 v5, 15.3.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_FUNCTION,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !ECMA_BUILTIN_FUNCTION_PROTOTYPE_H */
 
-/* Number properties:
- *  (property name, object pointer getter) */
-
-/* ECMA-262 v5, 15.3.4 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              0,
-              ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_function_prototype_object_to_string, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_APPLY, ecma_builtin_function_prototype_object_apply, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_CALL, ecma_builtin_function_prototype_object_call, NON_FIXED, 1)
-ROUTINE (LIT_MAGIC_STRING_BIND, ecma_builtin_function_prototype_object_bind, NON_FIXED, 1)
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

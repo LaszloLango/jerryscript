@@ -13,35 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Promose built-in description
- */
+#ifndef ECMA_BUILTIN_PROMISE_H
+#define ECMA_BUILTIN_PROMISE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_ES2015_PROMISE_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_promise_property_descriptor_list[];
+ecma_value_t ecma_builtin_promise_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_promise_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Number properties:
- *  (property name, number value, writable, enumerable, configurable) */
+#endif /* !ECMA_BUILTIN_PROMISE_H */
 
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-/* Object properties:
- *  (property name, object pointer getter) */
-
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_PROMISE_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_REJECT, ecma_builtin_promise_reject, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_RESOLVE, ecma_builtin_promise_resolve, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_RACE, ecma_builtin_promise_race, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_ALL, ecma_builtin_promise_all, 1, 1)
-
-#endif /* !CONFIG_DISABLE_ES2015_PROMISE_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

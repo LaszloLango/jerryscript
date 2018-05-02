@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-function-prototype.h"
 #include "ecma-builtin-helpers.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
@@ -25,13 +26,6 @@
 #include "ecma-objects.h"
 #include "ecma-try-catch-macro.h"
 #include "jrt.h"
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-function-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID function_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -354,3 +348,15 @@ ecma_builtin_function_prototype_dispatch_construct (const ecma_value_t *argument
  * @}
  * @}
  */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_function_prototype_property_descriptor_list[] =
+{
+  { LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_FUNCTION } },
+  { LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 0 } },
+  { LIT_MAGIC_STRING_TO_STRING_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_function_prototype_object_to_string } },
+  { LIT_MAGIC_STRING_APPLY, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (2)), { ecma_builtin_function_prototype_object_apply } },
+  { LIT_MAGIC_STRING_CALL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_function_prototype_object_call } },
+  { LIT_MAGIC_STRING_BIND, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_function_prototype_object_bind } },
+  { LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};

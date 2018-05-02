@@ -13,34 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Array description
- */
+#ifndef ECMA_BUILTIN_ARRAY_H
+#define ECMA_BUILTIN_ARRAY_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_ARRAY_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_array_property_descriptor_list[];
+ecma_value_t ecma_builtin_array_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_array_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_ARRAY_H */
 
-/* ECMA-262 v5, 15.4.3.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_ARRAY_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-/* Number properties:
- *  (property name, object pointer getter) */
-
-/* ECMA-262 v5, 15.4.3 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_IS_ARRAY_UL, ecma_builtin_array_object_is_array, 1, 1)
-
-#endif /* !CONFIG_DISABLE_ARRAY_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

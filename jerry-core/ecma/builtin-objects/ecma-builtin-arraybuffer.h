@@ -13,34 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * ArrayBuffer built-in description
- */
+#ifndef ECMA_BUILTIN_ARRAYBUFFER_H
+#define ECMA_BUILTIN_ARRAYBUFFER_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_arraybuffer_property_descriptor_list[];
+ecma_value_t ecma_builtin_arraybuffer_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_arraybuffer_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Number properties:
- *  (property name, number value, writable, enumerable, configurable) */
+#endif /* !ECMA_BUILTIN_ARRAYBUFFER_H */
 
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-/* Object properties:
- *  (property name, object pointer getter) */
-
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_ARRAYBUFFER_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-
-/* ES2015 24.1.3.1 */
-ROUTINE (LIT_MAGIC_STRING_IS_VIEW_UL, ecma_builtin_arraybuffer_object_is_view, 1, 1)
-
-#endif /* !CONFIG_DISABLE_ES2015_TYPEDARRAY_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

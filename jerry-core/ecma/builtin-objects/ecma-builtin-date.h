@@ -13,27 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Date built-in description
- */
+#ifndef ECMA_BUILTIN_DATE_H
+#define ECMA_BUILTIN_DATE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_DATE_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_date_property_descriptor_list[];
+ecma_value_t ecma_builtin_date_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_date_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* ECMA-262 v5, 15.9.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_DATE_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
+#endif /* !ECMA_BUILTIN_DATE_H */
 
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              7,
-              ECMA_PROPERTY_FIXED)
-
-ROUTINE (LIT_MAGIC_STRING_PARSE, ecma_builtin_date_parse, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_UTC_U, ecma_builtin_date_utc, NON_FIXED, 7)
-ROUTINE (LIT_MAGIC_STRING_NOW, ecma_builtin_date_now, 0, 0)
-
-#endif /* !CONFIG_DISABLE_DATE_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

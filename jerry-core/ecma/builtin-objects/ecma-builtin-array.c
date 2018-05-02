@@ -14,6 +14,7 @@
  */
 
 #include "ecma-alloc.h"
+#include "ecma-builtin-array.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -26,13 +27,6 @@
 #include "jrt.h"
 
 #ifndef CONFIG_DISABLE_ARRAY_BUILTIN
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-array.inc.h"
-#define BUILTIN_UNDERSCORED_ID array
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -101,6 +95,15 @@ ecma_builtin_array_dispatch_construct (const ecma_value_t *arguments_list_p, /**
   return ecma_op_create_array_object (arguments_list_p, arguments_list_len, true);
 } /* ecma_builtin_array_dispatch_construct */
 
+const ecma_builtin_property_descriptor_t
+ecma_builtin_array_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_PROTOTYPE, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_FIXED, { .value = ECMA_BUILTIN_ID_ARRAY_PROTOTYPE } },
+{ LIT_MAGIC_STRING_LENGTH, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FIXED, { .value = 1 } },
+{ LIT_MAGIC_STRING_IS_ARRAY_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_array_object_is_array } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
+
 /**
  * @}
  * @}
@@ -108,3 +111,4 @@ ecma_builtin_array_dispatch_construct (const ecma_value_t *arguments_list_p, /**
  */
 
 #endif /* !CONFIG_DISABLE_ARRAY_BUILTIN */
+

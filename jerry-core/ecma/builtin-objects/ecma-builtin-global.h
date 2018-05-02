@@ -19,8 +19,9 @@
 #include "ecma-globals.h"
 #include "ecma-builtins.h"
 
+extern const ecma_builtin_property_descriptor_t ecma_builtin_global_property_descriptor_list[];
 ecma_value_t ecma_builtin_global_dispatch_call (const ecma_value_t *, ecma_length_t);
 ecma_value_t ecma_builtin_global_dispatch_construct (const ecma_value_t *, ecma_length_t);
-extern const ecma_builtin_property_descriptor_t ecma_builtin_global_property_descriptor_list[];
 
 #endif /* !ECMA_BUILTIN_GLOBAL_H */
+

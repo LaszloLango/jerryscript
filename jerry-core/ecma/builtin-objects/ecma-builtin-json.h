@@ -13,19 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * JSON built-in description
- */
+#ifndef ECMA_BUILTIN_JSON_H
+#define ECMA_BUILTIN_JSON_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_JSON_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_json_property_descriptor_list[];
+ecma_value_t ecma_builtin_json_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_json_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_PARSE, ecma_builtin_json_parse, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_STRINGIFY, ecma_builtin_json_stringify, 3, 3)
+#endif /* !ECMA_BUILTIN_JSON_H */
 
-#endif /* !CONFIG_DISABLE_JSON_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

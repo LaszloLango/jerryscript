@@ -13,60 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * String.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_STRING_PROTOTYPE_H
+#define ECMA_BUILTIN_STRING_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_STRING_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_string_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_string_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_string_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_STRING_PROTOTYPE_H */
 
-/* ECMA-262 v5, 15.5.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_STRING,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
-
-/* Number properties:
- *  (property name, number value) */
-
-/* ECMA-262 v5, 15.5.4 (String.prototype is itself a String object whose value is an empty String), 15.5.5.1 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              0,
-              ECMA_PROPERTY_FIXED)
-
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_string_prototype_object_to_string, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_VALUE_OF_UL, ecma_builtin_string_prototype_object_value_of, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_CONCAT, ecma_builtin_string_prototype_object_concat, NON_FIXED, 1)
-ROUTINE (LIT_MAGIC_STRING_SLICE, ecma_builtin_string_prototype_object_slice, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_INDEX_OF_UL, ecma_builtin_string_prototype_object_index_of, 2, 1)
-ROUTINE (LIT_MAGIC_STRING_LAST_INDEX_OF_UL, ecma_builtin_string_prototype_object_last_index_of, 2, 1)
-ROUTINE (LIT_MAGIC_STRING_CHAR_AT_UL, ecma_builtin_string_prototype_object_char_at, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_CHAR_CODE_AT_UL, ecma_builtin_string_prototype_object_char_code_at, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_LOCALE_COMPARE_UL, ecma_builtin_string_prototype_object_locale_compare, 1, 1)
-
-#ifndef CONFIG_DISABLE_REGEXP_BUILTIN
-ROUTINE (LIT_MAGIC_STRING_MATCH, ecma_builtin_string_prototype_object_match, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_REPLACE, ecma_builtin_string_prototype_object_replace, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_SEARCH, ecma_builtin_string_prototype_object_search, 1, 1)
-#endif /* !CONFIG_DISABLE_REGEXP_BUILTIN */
-
-ROUTINE (LIT_MAGIC_STRING_SPLIT, ecma_builtin_string_prototype_object_split, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_SUBSTRING, ecma_builtin_string_prototype_object_substring, 2, 2)
-ROUTINE (LIT_MAGIC_STRING_TO_LOWER_CASE_UL, ecma_builtin_string_prototype_object_to_lower_case, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_TO_LOCALE_LOWER_CASE_UL, ecma_builtin_string_prototype_object_to_locale_lower_case, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_TO_UPPER_CASE_UL, ecma_builtin_string_prototype_object_to_upper_case, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_TO_LOCALE_UPPER_CASE_UL, ecma_builtin_string_prototype_object_to_locale_upper_case, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_TRIM, ecma_builtin_string_prototype_object_trim, 0, 0)
-
-#ifndef CONFIG_DISABLE_ANNEXB_BUILTIN
-ROUTINE (LIT_MAGIC_STRING_SUBSTR, ecma_builtin_string_prototype_object_substr, 2, 2)
-#endif /* !CONFIG_DISABLE_ANNEXB_BUILTIN */
-
-#endif /* !CONFIG_DISABLE_STRING_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

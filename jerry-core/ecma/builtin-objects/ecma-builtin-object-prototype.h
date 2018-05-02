@@ -13,27 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Object.prototype built-in description
- */
+#ifndef ECMA_BUILTIN_OBJECT_PROTOTYPE_H
+#define ECMA_BUILTIN_OBJECT_PROTOTYPE_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-/* Object properties:
- *  (property name, object pointer getter) */
+extern const ecma_builtin_property_descriptor_t ecma_builtin_object_prototype_property_descriptor_list[];
+ecma_value_t ecma_builtin_object_prototype_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_object_prototype_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* ECMA-262 v5, 15.2.4.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_CONSTRUCTOR,
-              ECMA_BUILTIN_ID_OBJECT,
-              ECMA_PROPERTY_CONFIGURABLE_WRITABLE)
+#endif /* !ECMA_BUILTIN_OBJECT_PROTOTYPE_H */
 
-/* Routine properties:
- *  (property name, C routine name, arguments number or NON_FIXED, value of the routine's length property) */
-ROUTINE (LIT_MAGIC_STRING_TO_STRING_UL, ecma_builtin_object_prototype_object_to_string, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_VALUE_OF_UL, ecma_builtin_object_prototype_object_value_of, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_TO_LOCALE_STRING_UL, ecma_builtin_object_prototype_object_to_locale_string, 0, 0)
-ROUTINE (LIT_MAGIC_STRING_HAS_OWN_PROPERTY_UL, ecma_builtin_object_prototype_object_has_own_property, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_IS_PROTOTYPE_OF_UL, ecma_builtin_object_prototype_object_is_prototype_of, 1, 1)
-ROUTINE (LIT_MAGIC_STRING_PROPERTY_IS_ENUMERABLE_UL, ecma_builtin_object_prototype_object_property_is_enumerable, 1, 1)
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"

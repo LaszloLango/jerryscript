@@ -15,6 +15,7 @@
 
 #include "ecma-alloc.h"
 #include "ecma-array-object.h"
+#include "ecma-builtin-regexp-prototype.h"
 #include "ecma-builtins.h"
 #include "ecma-conversion.h"
 #include "ecma-exceptions.h"
@@ -27,13 +28,6 @@
 #ifndef CONFIG_DISABLE_REGEXP_BUILTIN
 #include "ecma-regexp-object.h"
 #include "re-compiler.h"
-
-#define ECMA_BUILTINS_INTERNAL
-#include "ecma-builtins-internal.h"
-
-#define BUILTIN_INC_HEADER_NAME "ecma-builtin-regexp-prototype.inc.h"
-#define BUILTIN_UNDERSCORED_ID regexp_prototype
-#include "ecma-builtin-internal-routines-template.inc.h"
 
 /** \addtogroup ecma ECMA
  * @{
@@ -410,6 +404,22 @@ ecma_builtin_regexp_prototype_to_string (ecma_value_t this_arg) /**< this argume
 
   return ret_value;
 } /* ecma_builtin_regexp_prototype_to_string */
+
+const ecma_builtin_property_descriptor_t
+ecma_builtin_regexp_prototype_property_descriptor_list[] =
+{
+{ LIT_MAGIC_STRING_CONSTRUCTOR, ECMA_BUILTIN_PROPERTY_OBJECT, ECMA_PROPERTY_CONFIGURABLE_WRITABLE, { .value = ECMA_BUILTIN_ID_REGEXP } },
+{ LIT_MAGIC_STRING_SOURCE, ECMA_BUILTIN_PROPERTY_STRING, ECMA_PROPERTY_FIXED, { .value = LIT_MAGIC_STRING_EMPTY_NON_CAPTURE_GROUP } },
+{ LIT_MAGIC_STRING_GLOBAL, ECMA_BUILTIN_PROPERTY_SIMPLE, ECMA_PROPERTY_FIXED, { .value = ECMA_VALUE_FALSE } },
+{ LIT_MAGIC_STRING_IGNORECASE_UL, ECMA_BUILTIN_PROPERTY_SIMPLE, ECMA_PROPERTY_FIXED, { .value = ECMA_VALUE_FALSE } },
+{ LIT_MAGIC_STRING_MULTILINE, ECMA_BUILTIN_PROPERTY_SIMPLE, ECMA_PROPERTY_FIXED, { .value = ECMA_VALUE_FALSE } },
+{ LIT_MAGIC_STRING_LASTINDEX_UL, ECMA_BUILTIN_PROPERTY_NUMBER, ECMA_PROPERTY_FLAG_WRITABLE, { .value = 0 } },
+{ LIT_MAGIC_STRING_COMPILE, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_regexp_prototype_compile } },
+{ LIT_MAGIC_STRING_EXEC, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_regexp_prototype_exec } },
+{ LIT_MAGIC_STRING_TEST, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (1)), { ecma_builtin_regexp_prototype_test } },
+{ LIT_MAGIC_STRING_TO_STRING_UL, ECMA_BUILTIN_PROPERTY_ROUTINE, (ECMA_PROPERTY_FLAG_CONFIGURABLE | ECMA_PROPERTY_FLAG_WRITABLE | ECMA_SET_ROUTINE_LENGTH (0)), { ecma_builtin_regexp_prototype_to_string } },
+{ LIT_MAGIC_STRING__COUNT, ECMA_BUILTIN_PROPERTY_END, 0, { .value = 0 } }
+};
 
 /**
  * @}

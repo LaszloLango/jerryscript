@@ -13,30 +13,15 @@
  * limitations under the License.
  */
 
-/*
- * Boolean description
- */
+#ifndef ECMA_BUILTIN_BOOLEAN_H
+#define ECMA_BUILTIN_BOOLEAN_H
 
-#include "ecma-builtin-helpers-macro-defines.inc.h"
+#include "ecma-globals.h"
+#include "ecma-builtins.h"
 
-#ifndef CONFIG_DISABLE_BOOLEAN_BUILTIN
+extern const ecma_builtin_property_descriptor_t ecma_builtin_boolean_property_descriptor_list[];
+ecma_value_t ecma_builtin_boolean_dispatch_call (const ecma_value_t *, ecma_length_t);
+ecma_value_t ecma_builtin_boolean_dispatch_construct (const ecma_value_t *, ecma_length_t);
 
-/* Object properties:
- *  (property name, object pointer getter) */
+#endif /* !ECMA_BUILTIN_BOOLEAN_H */
 
-/* ECMA-262 v5, 15.6.3.1 */
-OBJECT_VALUE (LIT_MAGIC_STRING_PROTOTYPE,
-              ECMA_BUILTIN_ID_BOOLEAN_PROTOTYPE,
-              ECMA_PROPERTY_FIXED)
-
-/* Number properties:
- *  (property name, object pointer getter) */
-
-/* ECMA-262 v5, 15.6.3 */
-NUMBER_VALUE (LIT_MAGIC_STRING_LENGTH,
-              1,
-              ECMA_PROPERTY_FIXED)
-
-#endif /* !CONFIG_DISABLE_BOOLEAN_BUILTIN */
-
-#include "ecma-builtin-helpers-macro-undefs.inc.h"
